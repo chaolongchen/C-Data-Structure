@@ -1,0 +1,90 @@
+///Summary
+The volatile keyword indicates that a field might be modified by multiple threads that are executing at the same time. 
+Fields that are declared volatile are not subject to compiler optimizations that assume access by a single thread. 
+This ensures that the most up-to-date value is present in the field at all times.
+The volatile modifier is usually used for a field that is accessed by multiple threads without using the lock statement to serialize access.
+///
+
+Volatile, a modifier, reduces concurrency issues. Compilers reorder instructions in blocks. 
+This improves performance but causes problems for concurrent threads. 
+Optimizations such as code motion can cause these problems.
+
+Example. Before we begin, please note that this example isn't ideal in that 
+it would function correctly without the volatile modifier. 
+It serves only to illustrate the concept of the volatile keyword, not to provide a real-world example.
+
+Next:
+In the example, there are two static fields. One is an object reference of string type. 
+The other is a volatile bool value type.
+
+Static Field
+Static String
+
+Then:
+In the Main method, a new thread is created, and the SetVolatile method is invoked. 
+In SetVolatile, both the fields are set.
+ThreadStart
+
+C# program that uses volatile field
+
+using System;
+using System.Threading;
+
+class Program
+{
+    static string _result;
+    static volatile bool _done;
+
+    static void SetVolatile()
+    {
+        // Set the string.
+        _result = "Dot Net Perls";
+        // The volatile field must be set at the end of this method.
+        _done = true;
+    }
+
+    static void Main()
+    {
+        // Run the above method on a new thread.
+        new Thread(new ThreadStart(SetVolatile)).Start();
+
+        // Wait a while.
+        Thread.Sleep(200);
+
+        // Read the volatile field.
+        if (_done)
+        {
+            Console.WriteLine(_result);
+        }
+    }
+}
+
+Output
+
+Dot Net Perls
+
+Why is the bool volatile? First, the logic in this program is correct even without the volatile modifier on the bool. 
+But compilers introduce extra, hidden complexity. They use a lot of optimizations.
+
+And:
+Some of these optimizations reorder loads and stores from variables. 
+So conceptually the program could be incorrect.
+
+The order of assignments could change. When multiple threads execute at once, this can cause serious problems. 
+Please keep in mind that the volatile modifier does not force synchronization of loads and stores.
+Instead, it simply tells the compiler not to change the order of accesses to the field. 
+By eliminating reordering optimizations, the code becomes more predictable from a programmer's perspective.
+Flags. The example, adapted from the C# specification, demonstrates the concept of a volatile field used as a flag. 
+The bool type is commonly used as a flag. So when the flag is set to true, you can take other action on that variable.
+Notice:
+Thanks to Robert Paveza for writing in with a correction. It originally contained an incorrect statement.
+
+Performance. Can volatile fields cause a performance problem if they are used too much? 
+In some cases, this may happen. It is probably a better idea not to use volatile in your programs at all.
+However, if you are using a volatile field that is accessed in a tight loop millions of times, 
+you can copy it into a regular local variable and then use that local variable. This will provide a performance boost.
+Local Variable Field
+
+Summary. The volatile modifier provides a way for you to restrict the optimizations the compiler 
+makes regarding loads and stores into the field. 
+You will typically use volatile in multithreaded programs and with flag variables.
