@@ -1,0 +1,466 @@
+List. Fossils from the past are in layers of rock. As time passes, new layers of rock are added. In a sense the fossil record is a list.
+In a computer program, a List can be added to. New records (like layers of rock) can be appended to the end. In C# a list is initialized. It adjusts its size as needed.
+Initialize List
+
+First example. Here we have a C# List of ints. We add 4 prime numbers to our List. The values are stored in the order added—2, 3, 5 and then 7.
+Note:
+There are other ways to create, and add elements to, Lists—this is not the simplest.
+Note 2:
+The angle brackets are part of the declaration type. They are not conditional (less or more than) operators.
+Based on: .NET 4.7 (2017)
+
+C# program that adds elements to List
+
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        List<int> list = new List<int>();
+        list.Add(2);
+        list.Add(3);
+        list.Add(5);
+        list.Add(7);
+    }
+}
+
+
+Note, int. The above example adds a primitive type (int) to a List collection. But a List can also hold reference types and object instances. Non-int types work just as well.
+Add
+
+AddRange. For adding many elements at once—adding an array to a List—we use the AddRange method. This can simplify code that combines collections.
+AddRange
+
+Foreach-loop. This is the best loop when no index is needed. We use the "foreach" keyword and declare a variable (like "prime" here) that is assigned to each element as we pass over it.
+C# program that uses List, foreach-loop
+
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        List<int> list = new List<int>();
+        list.Add(2);
+        list.Add(3);
+        list.Add(7);
+
+        // Loop through List with foreach.
+        foreach (int prime in list)
+        {
+            System.Console.WriteLine(prime);
+        }
+    }
+}
+
+Output
+
+2
+3
+7
+
+For-loop. Sometimes we want to access indexes of a List as we loop over its elements. A for-loop is ideal here. We print each element index with a string interpolation expression.
+Tip:
+Arrays use Length. But Lists use Count. To loop backwards, start with list.Count - 1, and decrement to >= 0.
+C# program that uses for-loop
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        List<int> list = new List<int>(new int[]{ 2, 3, 7 });
+        // Loop with for and use string interpolation to print values.
+        for (int i = 0; i < list.Count; i++)
+        {
+            Console.WriteLine($"{i} = {list[i]}");
+        }
+    }
+}
+
+Output
+
+0 = 2
+1 = 3
+2 = 7
+
+Count, clear. To get the number of elements, access the Count property. This is fast—just avoid the Count extension method. Count, on the List type, is equal to Length on arrays.
+Clear:
+Here we use the Clear method, along with the Count property, to erase all the elements in a List.
+Clear
+Info:
+Before Clear is called, this List has 3 elements. After Clear is called, it has 0 elements.
+Null:
+We can assign the List to null instead of calling Clear, with similar performance.
+C# program that counts List
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        List<bool> list = new List<bool>();
+        list.Add(true);
+        list.Add(false);
+        list.Add(true);
+        Console.WriteLine(list.Count); // 3
+
+        list.Clear();
+        Console.WriteLine(list.Count); // 0
+    }
+}
+
+Output
+
+3
+0
+
+Copy array. Here we create a List with elements from an array. We use the List constructor and pass it the array. List receives this parameter and fills its values from it.
+Caution:
+The array element type must match the List element type or compilation will fail.
+C# program that copies array to List
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        int[] arr = new int[3]; // New array with 3 elements.
+        arr[0] = 2;
+        arr[1] = 3;
+        arr[2] = 5;
+        List<int> list = new List<int>(arr); // Copy to List.
+        Console.WriteLine(list.Count);       // 3 elements in List.
+    }
+}
+
+Output
+
+3
+
+Test elements. We test each element for a certain value. This example shows a foreach-loop, which tests to see if 3 is in a list of primes.
+C# program that uses foreach
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // New list for example.
+        List<int> primes = new List<int>(new int[] { 2, 3, 5 });
+
+        // See if List contains 3.
+        foreach (int number in primes)
+        {
+            if (number == 3) // Will match once.
+            {
+                Console.WriteLine("Contains 3");
+            }
+        }
+    }
+}
+
+Output
+
+Contains 3
+
+IndexOf. This determines the element index of a certain value in the List collection. It searches for the first position (from the start) of the value.
+Note:
+IndexOf has two overloads. It works in the same way as string's IndexOf. It searches by value and returns the location.
+C# that uses IndexOf
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        List<int> primes = new List<int>(new int[] { 19, 23, 29 });
+
+        int index = primes.IndexOf(23); // Exists.
+        Console.WriteLine(index);
+
+        index = primes.IndexOf(10); // Does not exist.
+        Console.WriteLine(index);
+    }
+}
+
+Output
+
+1
+-1
+
+Contains, Exists, Find. These methods all provide searching. They vary in arguments accepted. With Predicates, we influence what elements match.
+Contains
+Exists
+Find
+
+Capacity. We can use the Capacity property on List, or pass an integer to the constructor (which sets an initial capacity) to improve allocation performance.
+Capacity
+Note:
+Setting a capacity sometimes improves performance by nearly two times for adding elements.
+However:
+Adding elements, and resizing List, is not usually a performance bottleneck in programs that access data.
+
+TrimExcess. This method's usage is limited. It reduces the memory used by lists with large capacities. And as MSDN states, TrimExcess often does nothing.
+Note:
+It is unclear how TrimExcess feels about its status. I wouldn't want to upset its feelings.
+The TrimExcess method does nothing if the list is at more than 90 percent of capacity.
+TrimExcess: MSDN
+
+BinarySearch. This implements (fittingly) the binary search algorithm. Binary search uses guesses to find the correct element faster than linear searching.
+BinarySearch
+
+ForEach. This is a method. Sometimes we may not want to write a traditional foreach-loop. Here ForEach is useful. It accepts an Action.
+Warning:
+Be cautious with Predicates and Actions. These objects can decrease the readability of code.
+
+TrueForAll. This method accepts a Predicate. If the Predicate returns true for each element in the List, TrueForAll() will also return true.
+Info:
+It checks the entire list—unless an element doesn't match and it returns false early.
+
+Join string list. Next we use string.Join on a List of strings. This is helpful when we need to turn several strings into one comma-delimited string.
+ToArray:
+It requires the ToArray instance method on List. This ToArray is not an extension method.
+Tip:
+The biggest advantage of Join here is that no trailing comma is present on the resulting string.
+C# that joins List
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // List of cities we need to join.
+        List<string> cities = new List<string>();
+        cities.Add("New York");
+        cities.Add("Mumbai");
+        cities.Add("Berlin");
+        cities.Add("Istanbul");
+
+        // Join strings into one CSV line.
+        string line = string.Join(",", cities.ToArray());
+        Console.WriteLine(line);
+    }
+}
+
+Output
+
+New York,Mumbai,Berlin,Istanbul
+
+Keys in Dictionary. We use the List constructor to get a List of keys from a Dictionary. This is a simple way to iterate over Dictionary keys (or store them elsewhere).
+Keys:
+The Keys property returns an enumerable collection of keys. But a List of these elements is more usable.
+C# that converts Keys
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // Populate example Dictionary.
+        var dict = new Dictionary<int, bool>();
+        dict.Add(3, true);
+        dict.Add(5, false);
+
+        // Get a List of all the Keys.
+        List<int> keys = new List<int>(dict.Keys);
+        foreach (int key in keys)
+        {
+            Console.WriteLine(key);
+        }
+    }
+}
+
+Output
+
+3, 5
+
+Insert. This is a useful but slow method. The string here is inserted at index 1. This makes it the second element. If you Insert often, consider Queue and LinkedList.
+Insert
+Also:
+A Queue may allow simpler usage of the collection in our code. This may be easier to understand.
+Queue
+C# that inserts into List
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        List<string> dogs = new List<string>(); // Example list.
+
+        dogs.Add("spaniel"); // Contains: spaniel.
+        dogs.Add("beagle"); // Contains: spaniel, beagle.
+        dogs.Insert(1, "dalmatian"); // Spaniel, dalmatian, beagle.
+
+        foreach (string dog in dogs) // Display for verification.
+        {
+            Console.WriteLine(dog);
+        }
+    }
+}
+
+Output
+
+spaniel
+dalmatian
+beagle
+
+InsertRange. This method inserts many elements at once. Please be aware it can impact performance in a negative way. Successive elements must be copied.
+InsertRange
+
+Remove. We present examples for Remove, RemoveAt, RemoveAll and RemoveRange. In general Remove operates the same way as Insert. It too hinders performance.
+Remove
+RemoveAt
+RemoveAll
+
+Sort orders the elements in the List. For strings it orders alphabetically. For integers (or other numbers) it orders from lowest to highest.
+Sort
+Note:
+Sort acts upon elements depending on type. It is possible to provide a custom method.
+
+Reverse. With this method no sorting occurs—the original order is intact but inverted. The strings contained in the List are left unchanged.
+Array.Reverse
+Internally:
+This method invokes the Array.Reverse method. Many list methods are implemented with Array methods.
+C# that uses Reverse
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        List<string> list = new List<string>();
+        list.Add("anchovy");
+        list.Add("barracuda");
+        list.Add("bass");
+        list.Add("viperfish");
+
+        // Reverse List in-place, no new variables required.
+        list.Reverse();
+
+        foreach (string value in list)
+        {
+            Console.WriteLine(value);
+        }
+    }
+}
+
+Output
+
+viperfish
+bass
+barracuda
+anchovy
+
+Conversion of data types is a challenge. We can convert a List to an array of the same type using the instance method ToArray. There are examples of these conversions.
+List to Array
+CopyTo
+
+Convert list to string. Some string methods are used with lists. We use Concat and Join. Sometimes StringBuilder is also useful. This is a common requirement.
+Convert List, String
+Concat
+Join: string.Join
+
+GetRange. This returns a range of elements in a List. This is similar to the Take and Skip methods from LINQ. It has different syntax. The result List can be used like any other List.
+LINQ
+C# that gets ranges from List
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        List<string> rivers = new List<string>(new string[]
+        {
+            "nile",
+            "amazon", // River 2.
+            "yangtze", // River 3.
+            "mississippi",
+            "yellow"
+        });
+
+        // Get rivers 2 through 3.
+        List<string> range = rivers.GetRange(1, 2);
+        foreach (string river in range)
+        {
+            Console.WriteLine(river);
+        }
+    }
+}
+
+Output
+
+amazon
+yangtze
+
+DataGridView. We can use the List type with a DataGridView. But sometimes it is better to convert the List to a DataTable. For a List of string arrays, this will work better.
+Convert List, DataTable
+
+Equality. Sometimes we need to test two Lists for equality, even when their elements are unordered. We can sort and then compare, or use a custom List equality method.
+List Element Equality
+
+Structs. When using List, we can improve performance and reduce memory usage with structs instead of classes. A List of structs is allocated in contiguous memory, unlike a List of classes.
+However:
+Using structs will actually decrease performance when they are used as parameters in methods such as those on the List type.
+Structs
+
+Var keyword. This shortens lines of code, which sometimes improves readability. Var has no effect on performance, only readability for programmers.
+Var
+C# that uses var with List
+
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        var list1 = new List<int>();       // Var keyword used.
+        List<int> list2 = new List<int>(); // This is equivalent.
+    }
+}
+
+GetEnumerator. Programs are built upon many abstractions. With List, even loops can be abstracted (into an Enumerator). We use the same methods to loop over a List or an array.
+GetEnumerator
+
+Combine lists. With Concat, a method from the System.Linq namespace, we can add one list to another. Only a single method call is required.
+Concat, List
+
+Remove duplicates. With Distinct() we can remove duplicates from a List. Other algorithms, that use Dictionary, can be used to scan for and erase duplicates.
+Dedupe List
+
+Serialize list. A List can be read from, and written to, a file. This is list serialization. The "Serializable" attribute is useful here.
+Serialize List
+
+Nested list. With nesting, we create jagged lists. We can simulate 2D lists with lists of lists. This is powerful and often useful.
+Nested List
+
+Null. The List is a reference type—it is allocated on the managed heap. And it can be null. We often must check for null lists to avoid NullReferenceExceptions.
+Null List
+
+Static. With a static list, we form a global store of elements. A public, static list can be accessed throughout a program with no object instances.
+Static List
+
+List is a constructed, parametric type. It is powerful and performs well. It provides flexible allocation and growth, making it easier to use than arrays.
+List's syntax is at first confusing. But we become used to it. In most programs lacking strict memory or performance constraints, List is ideal.
