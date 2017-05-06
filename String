@@ -1,0 +1,135 @@
+https://www.dotnetperls.com/string
+
+String. You look into a reflecting pool. A message suddenly appears. It is a string written upon the water's surface. Strings have words and characters.
+String methods. Usually strings do not appear in reflecting pools. But we can manipulate any C# string with methods. New strings are returned.
+Compare
+CompareOrdinal
+CompareTo
+Concat
+Contains
+Copy
+CopyTo
+EndsWith
+Empty
+Equals
+Format
+GetEnumerator
+GetHashCode
+IndexOf
+IndexOfAny
+Insert
+Intern
+IsInterned
+IsNormalized
+IsNullOrEmpty
+IsNullOrWhiteSpace
+Join
+LastIndexOf
+LastIndexOfAny
+Length
+Normalize
+PadLeft
+PadRight
+Remove
+Replace
+Split
+StartsWith
+Substring
+ToCharArray
+ToLower
+ToLowerInvariant
+ToString
+ToUpper
+ToUpperInvariant
+Trim
+TrimEnd
+TrimStart
+
+String interpolation. A string can be created with interpolated values in it. This is similar to string.Format but the syntax is different. We precede the string literal with a "$" sign.
+String Interpolation
+
+Constructor. Strings are often reused, and passed around within a program. Methods like Replace() create new strings. But we can also create new ones with a constructor.
+String Constructor
+
+Literals. These specify string data. We use quotes around literal data (characters). Literals are embedded in the program executable.
+Literal
+
+Comparisons. Are two strings equal? In a Dictionary, we can use a StringComparer to change how keys are compared. We can ignore case.
+StringComparer
+StringComparison
+
+Char. A string contains data made up of individual characters. We deal with these chars in looping constructs. Accessing chars is a fast way to test strings.
+Char
+Char: Literal
+
+Char methods. Many useful char methods are static. We call them on the "char" type, not on an instance of a char. Here are useful ones.
+char.IsControl
+char.IsDigit
+char.IsLetterOrDigit
+char.IsLower
+char.IsPunctuation
+char.IsSeparator
+char.IsWhiteSpace
+char.ToLower
+
+TextInfo. This type provides some helpful methods. We can convert a string To Title Case with ToTitleCase. No custom methods are needed.
+TextInfo
+TextInfo: ToTitleCase
+
+Whitespace. Strings often contain newline or whitespace. We often need to check for these values. We use methods like IsNullOrWhitespace.
+NewLine
+Line Count
+Whitespace
+
+Empty. An empty string has zero characters. Meanwhile a null string is no string at all. It is a reference that points to no memory location.
+Empty Strings
+Null Strings
+
+Parse, TryParse. When we see a string like "1230" we usually want its numeric form. We use TryParse for this. Here we transform strings into other types. Many routines are built-in.
+Parse
+
+Conversions. We can convert a list into a string. And we can convert a string into a byte array. These are some of the most common conversions.
+Convert: List, String
+Convert: String, Byte Array
+Convert: String, Int
+
+Custom methods. Many string algorithms are composed from the built-in methods. With Substring calls we can Truncate strings. With ToCharArray we can change characters.
+Custom: IsUpper, IsLower
+Custom: Reverse String
+Custom: Right
+Custom: Sort String Lengths
+Custom: ToCharArray, Edit Chars
+Custom: Truncate
+Custom: Uppercase First Letters
+
+Custom methods, chars. Here are some custom char-based string algorithms. We test individual chars in strings. We use arrays to look up char values.
+Custom: ASCII Table
+Custom: Char Lookup Table
+Custom: Char Test
+Custom: Combine Chars
+Custom: Count Characters
+Custom: Count Letter Frequencies
+Custom: Duplicate Characters
+Custom: Get Char at Index
+Custom: Remove Chars
+
+Explanations. I explain concepts of strings. How do we append strings when there is no append method? We also learn to increment strings.
+String Append
+String Increment
+String Property
+
+StringBuilder. This is not a string, but it is used to build up or change strings. For appending strings in a loop, we likely want to use StringBuilder.
+StringBuilder
+
+StringBuilder, methods. Here are some methods that the StringBuilder class provides. Some optimizations based on StringBuilder are shown.
+StringBuilder: Append
+StringBuilder: AppendFormat
+StringBuilder: AppendLine
+StringBuilder: Capacity
+StringBuilder: Clear
+StringBuilder: ToString
+
+Optimization. In typical usage strings are fast. But they are sometimes used in an inefficient way. Often reducing string allocations is helpful.
+Optimization
+
+A review. A string is immutable. It can be used in many methods, and none of them have to worry about data changes. It never becomes invalid. This reduces copies.
