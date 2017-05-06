@@ -1,0 +1,66 @@
+A Mutex is like a C# lock, but it can work across multiple processes. In other words, Mutex can be computer-wide as well as application-wide.
+
+Mutex stands for mutual exclusion. The Mutex type ensures blocks of code are executed only once at a time. It can create named mutexes that can be opened by other processes. With it, we ensure only one instance is run on the computer.
+Example. This simple example uses the Mutex.OpenExisting method. If the OpenExisting method throws an exception, the specified named Mutex does not exist or is inaccessible. The IsSingleInstance method uses this behavior.
+And:
+If the Mutex does not exist, it creates a new one. Further instances of the program then can tell that an instance is already open.
+
+C# program that uses Mutex and OpenExisting
+
+using System;
+using System.Threading;
+
+class Program
+{
+    static Mutex _m;
+
+    static bool IsSingleInstance()
+    {
+        try
+        {
+            // Try to open existing mutex.
+            Mutex.OpenExisting("PERL");
+        }
+        catch
+        {
+            // If exception occurred, there is no such mutex.
+            Program._m = new Mutex(true, "PERL");
+
+            // Only one instance.
+            return true;
+        }
+        // More than one instance.
+        return false;
+    }
+
+    static void Main()
+    {
+        if (!Program.IsSingleInstance())
+        {
+            Console.WriteLine("More than one instance"); // Exit program.
+        }
+        else
+        {
+            Console.WriteLine("One instance"); // Continue with program.
+        }
+        // Stay open.
+        Console.ReadLine();
+    }
+}
+
+Result
+
+1. First execution will display "One instance"
+2. Second execution will display "More than one instance"
+3. Third execution is the same as second.
+
+The program incurs one exception in the common case of the first instance being run. Exceptions are slower than many constructs. But if your program is computationally-intensive, it is more beneficial to avoid extra instances.
+Please note:
+The OpenExisting examples on MSDN also use exception handling. This is the recommended style.
+Mutex.OpenExisting: MSDN
+
+Discussion. It is sometimes important to call Release on your Mutex instance once you are done with it. In the example above this is not necessary—the Mutex will be released when the program exits. The code works well without releasing the Mutex.
+Continuing on, the Mutex type provides the WaitOne, WaitAll and WaitAny methods. The WaitOne method blocks the current thread until the Mutex has been released. Releases occur when the Release method is called.
+Summary. The Mutex type provides a way to use system-wide synchronization. It can also synchronize threads within a single program. When a Mutex has a string name, it can be opened from other processes with OpenExisting.
+And:
+This behavior can be used to enforce synchronization between processes and threads.
