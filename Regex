@@ -1,0 +1,290 @@
+///Summary
+
+Namespace: System.Text.RegularExpressions
+
+Input: Target String and Pattern String
+
+Methond: 
+1. instance: 
+  Regex regex = new Regex(@"\d+");   \\initial a instance with pattern input.
+  Match match = regex.Match("Dot 55 Perls");  \\check if the target string match with pattern string.
+
+2. static
+  string input = "/content/alternate-1.aspx";
+  Match match = Regex.Match(input, @"content/([A-Za-z0-9\-]+)\.aspx$", RegexOptions.IgnoreCase);
+
+Note: instance is faster than static, we can use an instance of Regex shared through the project
+
+Regex.Match, Match.Success, Match.NextMatch()
+
+regular expression cheet sheet
+http://www.rexegg.com/regex-quickstart.html
+///
+
+Match. This program introduces the Regex class. 
+We use its constructor and the Match method, and then handle the returned Match object.
+
+Namespace:
+All these types are found in the System.Text.RegularExpressions namespace.
+Pattern:
+The Regex uses a pattern that indicates one or more digits. The characters "55" match this pattern.
+Success:
+The returned Match object has a bool property called Success. If it equals true, we found a match.
+
+Based on: .NET 4.6
+
+C# program that uses Match, Regex
+
+using System;
+using System.Text.RegularExpressions;
+
+class Program
+{
+    static void Main()
+    {
+        Regex regex = new Regex(@"\d+");
+        Match match = regex.Match("Dot 55 Perls");
+        if (match.Success)
+        {
+            Console.WriteLine(match.Value);
+        }
+    }
+}
+
+Output
+
+55
+
+Static method. Here we match parts of a string (a file name in a directory path). We only accept ranges of characters and some punctuation. On Success, we access the group.
+Static:
+We use the Regex.Match static method. It is also possible to call Match upon a Regex object.
+Success:
+We test the result of Match with the Success property. When true, a Match occurred and we can access its Value or Groups.
+Groups:
+This collection is indexed at 1, not zero—the first group is found at index 1. This is important to remember.
+Groups
+C# program that uses Regex.Match
+
+using System;
+using System.Text.RegularExpressions;
+
+class Program
+{
+    static void Main()
+    {
+        // First we see the input string.
+        string input = "/content/alternate-1.aspx";
+
+        // Here we call Regex.Match.
+        Match match = Regex.Match(input, @"content/([A-Za-z0-9\-]+)\.aspx$",
+            RegexOptions.IgnoreCase);
+
+        // Here we check the Match instance.
+        if (match.Success)
+        {
+            // Finally, we get the Group value and display it.
+            string key = match.Groups[1].Value;
+            Console.WriteLine(key);
+        }
+    }
+}
+
+Output
+
+alternate-1
+
+Pattern details
+
+@"              This starts a verbatim string literal.
+content/        The group must follow this string.
+[A-Za-z0-9\-]+  One or more alphanumeric characters.
+(...)           A separate group.
+\.aspx          This must come after the group.
+$               Matches the end of the string.
+
+NextMatch. More than one match may be found. We can call the NextMatch method to search for a match that comes after the current one in the text. NextMatch can be used in a loop.
+Here:
+We match all the digits in the input string (4 and 5). Two matches occur, so we use NextMatch to get the second one.
+Return:
+NextMatch returns another Match object—it does not modify the current one. We assign a variable to it.
+C# program that uses NextMatch
+
+using System;
+using System.Text.RegularExpressions;
+
+class Program
+{
+    static void Main()
+    {
+        string value = "4 AND 5";
+
+        // Get first match.
+        Match match = Regex.Match(value, @"\d");
+        if (match.Success)
+        {
+            Console.WriteLine(match.Value);
+        }
+
+        // Get second match.
+        match = match.NextMatch();
+        if (match.Success)
+        {
+            Console.WriteLine(match.Value);
+        }
+    }
+}
+
+Output
+
+4
+5
+
+Static. Often a Regex instance object is faster than the static Regex.Match. 
+For performance, we should usually use an instance object. It can be shared throughout an entire project.
+Static Regex
+Sometimes:
+We only need to call Match once in a program's execution. A Regex object does not help here.
+Class:
+Here a static class stores an instance Regex that can be used project-wide. We initialize it inline.
+Static Class
+C# program that uses static Regex
+
+using System;
+using System.Text.RegularExpressions;
+
+class Program
+{
+    static void Main()
+    {
+        // The input string again.
+        string input = "/content/alternate-1.aspx";
+
+        // This calls the static method specified.
+        Console.WriteLine(RegexUtil.MatchKey(input));
+    }
+}
+
+static class RegexUtil
+{
+    static Regex _regex = new Regex(@"/content/([a-z0-9\-]+)\.aspx$");
+    /// <summary>
+    /// This returns the key that is matched within the input.
+    /// </summary>
+    static public string MatchKey(string input)
+    {
+        Match match = _regex.Match(input.ToLower());
+        if (match.Success)
+        {
+            return match.Groups[1].Value;
+        }
+        else
+        {
+            return null;
+        }
+    }
+}
+
+Output
+
+alternate-1
+
+Numbers. A common requirement is extracting a number from a string. We can do this with Regex.Match. To get further numbers, consider Matches() or NextMatch.
+Digits:
+We extract a group of digit characters and access the Value string representation of that number.
+Parse:
+To parse the number, use int.Parse or int.TryParse on the Value here. This will convert it to an int.
+Parse
+C# program that matches numbers
+
+using System;
+using System.Text.RegularExpressions;
+
+class Program
+{
+    static void Main()
+    {
+        // ... Input string.
+        string input = "Dot Net 100 Perls";
+
+        // ... One or more digits.
+        Match m = Regex.Match(input, @"\d+");
+
+        // ... Write value.
+        Console.WriteLine(m.Value);
+    }
+}
+
+Output
+
+100
+
+Value, length, index. A Match object, returned by Regex.Match has a Value, Length and Index. These describe the matched text (a substring of the input).
+Value:
+This is the matched text, represented as a separate string. This is a substring of the original input.
+Length:
+This is the length of the Value string. Here, the Length of "Axxxxy" is 6.
+Index:
+The index where the matched text begins within the input string. The character "A" starts at index 4 here.
+C# that shows value, length, index
+
+using System;
+using System.Text.RegularExpressions;
+
+class Program
+{
+    static void Main()
+    {
+        Match m = Regex.Match("123 Axxxxy", @"A.*y");
+        if (m.Success)
+        {
+            Console.WriteLine("Value  = " + m.Value);
+            Console.WriteLine("Length = " + m.Length);
+            Console.WriteLine("Index  = " + m.Index);
+        }
+    }
+}
+
+Output
+
+Value  = Axxxxy
+Length = 6
+Index  = 4
+
+IsMatch. This method tests for a matching pattern. It does not capture groups from this pattern. It just sees if the pattern exists in a valid form in the input string.
+Bool:
+IsMatch returns a bool value. Both overloads receive an input string that is searched for matches.
+Bool Method
+Internals:
+When we use the static Regex.IsMatch method, a new Regex is created. This is done in the same way as any instance Regex.
+And:
+This instance is discarded at the end of the method. It will be cleaned up by the garbage collector.
+C# that uses Regex.IsMatch method
+
+using System;
+using System.Text.RegularExpressions;
+
+class Program
+{
+    /// <summary>
+    /// Test string using Regex.IsMatch static method.
+    /// </summary>
+    static bool IsValid(string value)
+    {
+        return Regex.IsMatch(value, @"^[a-zA-Z0-9]*$");
+    }
+
+    static void Main()
+    {
+        // Test the strings with the IsValid method.
+        Console.WriteLine(IsValid("dotnetperls0123"));
+        Console.WriteLine(IsValid("DotNetPerls"));
+        Console.WriteLine(IsValid(":-)"));
+        // Console.WriteLine(IsValid(null)); // Throws an exception
+    }
+}
+
+Output
+
+True
+True
+False
