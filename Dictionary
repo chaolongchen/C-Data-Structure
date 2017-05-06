@@ -1,0 +1,535 @@
+Dictionary. In a city many buildings are found. To find a structure we can search the entire city, street by street. But this becomes slow.
+With a dictionary, we can map a building to a location. We can map "park" to where it is found. Then to find the park, we can skip searching the whole city.
+An example. We add 4 keys with values to a Dictionary. Then we look inside it with the Visual Studio debugger. The Dictionary has pairs of keys and values.
+String, int:
+Dictionary is used with different elements. We specify its key type and its value type (string, int).
+Output:
+The example program has no output. It does nothing useful. At least it does not crash.
+
+Based on: .NET 4.7 (2017)
+
+C# program that uses Add method
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        Dictionary<string, int> dictionary =
+            new Dictionary<string, int>();
+
+        dictionary.Add("cat", 2);
+        dictionary.Add("dog", 1);
+        dictionary.Add("llama", 0);
+        dictionary.Add("iguana", -1);
+    }
+}
+
+Debugger. Let us peek inside the Visual Studio debugger to examine the memory. The Dictionary instance is represented by a collection of key and value pairs.
+Note:
+It is fun (and perhaps helpful) to open and close the data structure elements. Learning often involves experimentation.
+Tip:
+The pairs like (dog, 1) are the string representations of KeyValuePair instances. KeyValuePair is a struct.
+
+ContainsKey. This sees if a given string is present in a Dictionary. We use string keys here—we look at more types of Dictionaries further on. ContainsKey returns true if the key is found.
+ContainsKey
+C# program that uses ContainsKey
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        Dictionary<string, int> dictionary =
+            new Dictionary<string, int>();
+
+        dictionary.Add("apple", 1);
+        dictionary.Add("windows", 5);
+
+        // See whether Dictionary contains this string.
+        if (dictionary.ContainsKey("apple"))
+        {
+            int value = dictionary["apple"];
+            Console.WriteLine(value);
+        }
+
+        // See whether it contains this string.
+        if (!dictionary.ContainsKey("acorn"))
+        {
+            Console.WriteLine(false);
+        }
+    }
+}
+
+Output
+
+1
+False
+
+TryGetValue. This is often the most efficient look up method. As the name TryGetValue implies, it tests for the key. It then returns the value if it finds the key.
+TryGetValue
+C# program that uses TryGetValue
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        Dictionary<string, string> values =
+            new Dictionary<string, string>();
+
+        values.Add("cat", "feline");
+        values.Add("dog", "canine");
+        // Use TryGetValue.
+        string test;
+        if (values.TryGetValue("cat", out test)) // Returns true.
+        {
+            Console.WriteLine(test); // This is the value at cat.
+        }
+        if (values.TryGetValue("bird", out test)) // Returns false.
+        {
+            Console.WriteLine(false); // Not reached.
+        }
+    }
+}
+
+Output
+
+feline
+
+TryGetValue, syntax 2. We can declare the "out" variable directly in the method call. This can make the code easier to read—the statements are combined, but have the same effects.
+C# program that uses inline out, TryGetValue
+
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        var values = new Dictionary<string, string>();
+        values.Add("A", "uppercase letter A");
+        values.Add("c", "lowercase letter C");
+
+        // Use inline "out string" with TryGetValue.
+        if (values.TryGetValue("c", out string description))
+        {
+            System.Console.WriteLine(description);
+        }
+    }
+}
+
+Output
+
+lowercase letter C
+
+KeyValuePair. When a collection that implements IDictionary (like Dictionary) is used in a foreach-loop, it returns an enumeration. A Dictionary will return KeyValuePair structs in a loop.
+KeyValuePair
+
+KeyNotFoundException. This error happens when we access a nonexistent key. With Dictionary we must test keys for existence first, with ContainsKey or TryGetValue.
+KeyNotFoundException
+
+Loop. Here we loop over KeyValuePairs in a Dictionary. With collections like Dictionary, we must always know the value types. With each KeyValuePair, there is a Key member and Value member.
+Foreach
+String, int:
+The code creates a Dictionary with string keys and int values. The Dictionary stores animal counts.
+Tip:
+In the foreach-loop, each KeyValuePair has two members, a string Key and an int Value.
+C# program that uses foreach on Dictionary
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // Example Dictionary again.
+        Dictionary<string, int> d = new Dictionary<string, int>()
+        {
+            {"cat", 2},
+            {"dog", 1},
+            {"llama", 0},
+            {"iguana", -1}
+        };
+        // Loop over pairs with foreach.
+        foreach (KeyValuePair<string, int> pair in d)
+        {
+            Console.WriteLine("{0}, {1}", pair.Key, pair.Value);
+        }
+        // Use var keyword to enumerate dictionary.
+        foreach (var pair in d)
+        {
+            Console.WriteLine("{0}, {1}", pair.Key, pair.Value);
+        }
+    }
+}
+
+Output
+
+cat, 2
+dog, 1
+llama, 0
+iguana, -1
+
+cat, 2
+dog, 1
+llama, 0
+iguana, -1
+
+Var keyword. The final loop in the above code uses var. This reduces the amount of typing required. And it may make code easier to read for humans (like us).
+Var: Dictionary
+
+Keys. Here we use the Keys property. We then look through each key and look up the values. This method is slower but has the same results.
+KeyCollection:
+The Keys property returns a collection of type KeyCollection, not an actual List. We can convert it into a List.
+C# program that gets Keys
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        Dictionary<string, int> d = new Dictionary<string, int>()
+        {
+            {"cat", 2},
+            {"dog", 1},
+            {"llama", 0},
+            {"iguana", -1}
+        };
+        // Store keys in a List.
+        List<string> list = new List<string>(d.Keys);
+        // Loop through list.
+        foreach (string k in list)
+        {
+            Console.WriteLine("{0}, {1}", k, d[k]);
+        }
+    }
+}
+
+Output
+
+cat, 2
+dog, 1
+llama, 0
+iguana, -1
+
+Foreach, benchmark. Here we compare loops. A foreach-loop on KeyValuePairs is faster than the looping over Keys and accessing values in the loop body.
+Tip:
+When possible, loop over the pairs in a Dictionary directly. Eliminating lookups will improve performance.
+C# that benchmarks for each on Dictionary
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+
+class Program
+{
+    static void Main()
+    {
+        var test = new Dictionary<string, int>();
+        test["bird"] = 10;
+        test["frog"] = 20;
+        test["cat"] = 60;
+        int sum = 0;
+        const int _max = 1000000;
+
+        // Version 1: use foreach loop directly on Dictionary.
+        var s1 = Stopwatch.StartNew();
+        for (int i = 0; i < _max; i++)
+        {
+            foreach (var pair in test)
+            {
+                sum += pair.Value;
+            }
+        }
+        s1.Stop();
+
+        // Version 2: use foreach loop on Keys, then access values.
+        var s2 = Stopwatch.StartNew();
+        for (int i = 0; i < _max; i++)
+        {
+            foreach (var key in test.Keys)
+            {
+                sum += test[key];
+            }
+        }
+        s2.Stop();
+        Console.WriteLine(s1.Elapsed.TotalMilliseconds);
+        Console.WriteLine(s2.Elapsed.TotalMilliseconds);
+    }
+}
+
+Results
+
+28.117  ms    Dictionary foreach (measured January 2017)
+83.3468 ms    Keys foreach       (measured January 2017)
+
+Sort. A Dictionary cannot be directly sorted. But we can take its Keys and then sort those in a separate List collection. A query expression may also be used.
+Sort Dictionary
+
+Types. Dictionary is a generic class. To use it, we must specify a type. This is a good feature. It means we can use an int key just as easily as a string key.
+Int:
+In this program, we see an example of a Dictionary with int keys. The values can also be any type.
+C# that uses int keys
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // Use a Dictionary with an int key.
+        Dictionary<int, string> dict = new Dictionary<int, string>();
+        dict.Add(100, "Bill");
+        dict.Add(200, "Steve");
+        // We can look up the int in the Dictionary.
+        if (dict.ContainsKey(200))
+        {
+            Console.WriteLine(true);
+        }
+    }
+}
+
+Output
+
+True
+
+LINQ. Extension methods can be used with Dictionary. We use the ToDictionary method. This is an extension method on IEnumerable. It places keys and values into a new Dictionary.
+Lambda:
+The program uses lambda expressions. With these small functions, we specify a method directly as an argument.
+Lambdas
+Here:
+The example uses ToDictionary, from System.Linq, on a string array. It creates a lookup table for the strings.
+ToDictionary
+C# that uses LINQ
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        string[] arr = new string[]
+        {
+            "One",
+            "Two"
+        };
+        var dict = arr.ToDictionary(item => item, item => true);
+        foreach (var pair in dict)
+        {
+            Console.WriteLine("{0}, {1}",
+                pair.Key,
+                pair.Value);
+        }
+    }
+}
+
+Output
+
+One, True
+Two, True
+
+ContainsValue. This method lacks the constant-time look up speed of ContainsKey. It instead searches the entire collection. It is linear in complexity.
+ContainsValue
+Note:
+This example will loop through all elements in the Dictionary until it finds a match, or there are no more elements to check.
+Speed:
+MSDN states that "this method is an O(N) operation, where N is Count." It does not run in constant time.
+C# that uses ContainsValue
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        Dictionary<string, int> d = new Dictionary<string, int>();
+        d.Add("cat", 1);
+        d.Add("dog", 2);
+        if (d.ContainsValue(1))
+        {
+            Console.WriteLine(true); // True.
+        }
+    }
+}
+
+Output
+
+True
+
+Indexer. We do not need to use Add to insert into a Dictionary. We can instead use the indexer, with the "[" and "]" brackets. This syntax also gets the value at the key.
+Caution:
+If we try to get a value at a key that doesn't exist, an exception is thrown.
+Note:
+With the indexer, an exception is not thrown when we assign to a key that already has a value. But with Add, an exception is thrown.
+C# that uses Dictionary indexer
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        Dictionary<int, int> dictionary = new Dictionary<int, int>();
+
+        // We can assign with the indexer.
+        dictionary[1] = 2;
+        dictionary[2] = 1;
+        dictionary[1] = 3; // Reassign.
+
+        // Read with the indexer.
+        // ... An exception occurs if no element exists.
+        Console.WriteLine(dictionary[1]);
+        Console.WriteLine(dictionary[2]);
+    }
+}
+
+Output
+
+3
+1
+
+Clear. We can erase all pairs with the Clear method. Or we can assign the Dictionary variable to null. This causes little difference in memory usage—the entries are garbage-collected.
+Clear
+Internally:
+We find that Clear calls Array.Clear, which is not managed code. Dictionary is implemented with arrays.
+Array.Clear
+
+Count. This computes the total number of keys in a Dictionary. This is simpler than accessing the Keys property, or looping over the Dictionary to count it.
+Count
+
+Remove. We can eliminate an entry, not just by setting its value to null or string.Empty, but by also removing the key itself. With Remove, no remnants of the key-value pair are kept.
+Note:
+Running the code in Visual Studio, no exceptions are thrown. When we remove a key that doesn't exist, nothing happens.
+However:
+Remove() throws System.ArgumentNullException with a null parameter. We cannot remove null.
+C# that uses Remove
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        Dictionary<string, int> d = new Dictionary<string, int>();
+        d.Add("cat", 1);
+        d.Add("dog", 2);
+
+        d.Remove("cat"); // Removes cat.
+        d.Remove("nothing"); // Doesn't remove anything.
+    }
+}
+
+Copy. Dictionary provides a constructor that copies all values and keys into a new Dictionary instance. This constructor improves code reuse. It makes copying simpler.
+Copy Dictionary
+
+Return. A Dictionary can be returned, or passed as an argument. The Dictionary type is defined as a class. It is always passed as a reference type.
+And:
+This means only 32-64 bits will be copied on the method invocation. The same principle applies when returning values.
+Return
+
+List versus Dictionary. I suggest almost always using Dictionary for lookups. In large collections, a List will become unusable for lookups.
+But:
+A Dictionary will still work well with large amounts of data. With Dictionary a program recovers from pathological, edge cases.
+List
+Looping:
+It is faster to loop through elements in a List. If looping through elements is the most common operation, a List is superior.
+Dictionary vs. List Loops
+
+Compare types. Sometimes, an array or List can be used instead of a Dictionary. This influences performance. Any analysis depends on the program.
+Array vs. Dictionary
+List vs. Dictionary
+
+Composite keys. We can sometimes use multiple variables in a key. We can create a special function that transforms those variables into a string, serializing them.
+Note:
+We can use the string "1,2" to mean the ints 1 and 2. This approach is not optimally fast.
+Note 2:
+This is similar to how composite names in programming languages use a period: "Type.Member".
+
+Field. Sometimes it is useful to have a Dictionary at the class level, as a field. And if we have a static class, we should initialize the Dictionary at the class level.
+Note:
+Avoid the static constructor—static constructors often carry performance penalties.
+C# that uses Dictionary field
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        Example e = new Example();
+        Console.WriteLine(e.GetValue());
+    }
+}
+
+class Example
+{
+    Dictionary<int, int> _d = new Dictionary<int, int>()
+    {
+        {1, 1},
+        {2, 3},
+        {3, 5},
+        {6, 10}
+    };
+    public int GetValue()
+    {
+        return _d[2]; // Example only.
+    }
+}
+
+Output
+
+3
+
+GetEnumerator. With this method we can loop over a Dictionary with foreach. We call GetEnumerator() and then use a while-loop on the MoveNext method.
+GetEnumerator
+
+IEqualityComparer. Dictionary uses an IEqualityComparer to compute the hash code for its keys. We can implement this interface with a class. This can improve performance.
+IEqualityComparer
+
+Optimization. The Dictionary is well-optimized by the .NET Framework developers. They are smart people. But there are still techniques that influence performance.
+Optimization: Dictionary
+
+Binary format. In serialization we write a Dictionary to the disk. Usually strings are less efficient than a binary format. But with binary we cannot easily read the file.
+Dictionary Binary File
+
+Equals. Are two dictionaries equal? Do they have the same keys and values? With a special method we can check for equivalent data.
+Dictionary Equals
+
+Stop words. With a Dictionary we can remove certain words from a string. Small words like "and" are sometimes called "stop words." We can use a Dictionary to help eliminate these.
+Stopword Dictionary
+
+Combine keys. In this example we combine the keys of two dictionaries into another collection. A HashSet is used to union the two sets of keys.
+Combine Dictionary Keys
+
+Map. The Dictionary is a map. A real map helps us find our destination, but a digital map directs us from a key to a value. In languages we often find a map type.
+Map
+
+Case-insensitive keys. With a special StringComparer we can have case-insensitive key lookups on a dictionary. This reduces the need to call ToLower. It reduces string creation.
+Case, Dictionary
+
+Research. A Dictionary is powerful, but it is not magic. It just uses a good algorithm. This requires a hash code. We take keys and use arithmetic to transform them into numbers.
+Locations:
+We then store them in locations based on those numbers in the Dictionary. We select a "bucket" based on the hash.
+Finally:
+When we go to look up a key, we compute a new hash code and look for it in the Dictionary. Less searching is needed.
+We try to reference items in a table directly by doing arithmetic operations to transform keys into table addresses.
+Algorithms in C++ Third Edition: google.com
+
+It is good that fast lookups are important. We just spent lots of time explaining how to do them. We looped over a Dictionary with KeyValuePair.
+A review. We checked key existence with ContainsKey and TryGetValue. Dictionary, like all hash tables, is fascinating. It is fast. It is useful in many places.
