@@ -1,0 +1,84 @@
+Func handles many arguments. The Func type is a parameterized type. 
+We specify the number and kinds of parameters, and the type of the return value. 
+The Func type provides a way to store anonymous methods in a generalized and simple way.
+
+Example. 
+This program uses the lambda expression syntax with Func type instances to store anonymous methods. 
+Each of the Func type instances uses type parameters, and these are specified in the angle brackets < and >.
+
+Lambda
+So:
+The first type parameters are the arguments to the methods, and the final type parameter is the return value.
+Generic Class
+Return
+
+Based on: .NET 4.6
+
+C# program that uses Func generic type and lambdas
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        //
+        // Create a Func instance that has one parameter and one return value.
+        // ... Parameter is an integer, result value is a string.
+        //
+        Func<int, string> func1 = (x) => string.Format("string = {0}", x);
+        //
+        // Func instance with two parameters and one result.
+        // ... Receives bool and int, returns string.
+        //
+        Func<bool, int, string> func2 = (b, x) =>
+            string.Format("string = {0} and {1}", b, x);
+        //
+        // Func instance that has no parameters and one result value.
+        //
+        Func<double> func3 = () => Math.PI / 2;
+
+        //
+        // Call the Invoke instance method on the anonymous functions.
+        //
+        Console.WriteLine(func1.Invoke(5));
+        Console.WriteLine(func2.Invoke(true, 10));
+        Console.WriteLine(func3.Invoke());
+    }
+}
+
+Output
+
+string = 5
+string = True and 10
+1.5707963267949
+
+In Main, the program declares and assigns three Func type instances. 
+It uses the full type declaration of the Func types, which includes the parameterized types in the angle brackets.
+
+Note:
+In the Func types, all of the first parameterized types excluding the last are the argument types.
+And:
+The final parameterized type is the return value. We show two string return values and one double.
+
+The first Func receives an int and returns a string and it is declared as Func<int, string>. 
+The second receives a bool and an int and returns a string. 
+It is declared as Func<bool, int, string>. The third returns a value.
+
+Int
+Strings
+Bool
+Finally:
+This program calls the Invoke method on the Func type instances. 
+Each of the Invoke calls uses different parameters.
+
+Discussion. You cannot call the Invoke method with an invalid number of parameters. 
+The Func type itself stores the required parameter types and uses those to generate the Invoke method signature.
+You can use the Func type as a field, return value, local variable, or parameter in your C# programs. 
+You must specify the full type name with the type parameters. In this way we can store delegates by their signatures.
+Example:
+You can add the Func<int, string> as a field, and give it an identifier.
+
+Summary. We looked at the Func parameterized type and used it with the lambda expression syntax. 
+We stored anonymous functions inside Func pointers and then invoked those methods 
+through the Invoke method on the Func instances.
