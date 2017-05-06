@@ -1,0 +1,240 @@
+Action. This is a function object. Action objects return no values. 
+The Action type is similar to a void method. This generic type is found in the System namespace.
+
+To specify an Action, we must have no return value. 
+The Action must never return a value onto the evaluation stack. Often we use lambdas to specify Actions.
+
+Start. 
+The Actions point to anonymous functions. These functions cannot return values onto the evaluation stack. 
+An Action instance can receive parameters, but cannot return values.
+
+So:
+An Action instance is similar to a void method. The program shows how to Invoke the Action instances.
+
+Based on: .NET 4.6
+
+C# program that uses Action type and Invoke
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        // Example Action instances.
+        // ... First example uses one parameter.
+        // ... Second example uses two parameters.
+        // ... Third example uses no parameter.
+        // ... None have results.
+        Action<int> example1 =
+            (int x) => Console.WriteLine("Write {0}", x);
+        Action<int, int> example2 =
+            (x, y) => Console.WriteLine("Write {0} and {1}", x, y);
+        Action example3 =
+            () => Console.WriteLine("Done");
+        // Call the anonymous methods.
+        example1.Invoke(1);
+        example2.Invoke(2, 3);
+        example3.Invoke();
+    }
+}
+
+Output
+
+Write 1
+Write 2 and 3
+Done
+
+Notes, above program. We use Action with 3 lambda expressions. 
+The first Action instance uses the constructed type Action<int>, and an explicit parameter list in the lambda expression.
+And:
+It receives one argument when invoked. It returns no result—it is a void delegate method.
+
+Notes, continued. The second and third Action instances also return no value. The second Action receives 2 int parameters. The third Action receives no parameters.
+Int
+
+Notes, Invoke. The Invoke method receives a number of arguments equal to the specific type of Action. We must specify these arguments in the Action type declaration.
+Generic Method
+Tip:
+This information is determined at compile-time, before runtime. If a program compiles, it uses the correct argument types.
+
+A benchmark. How much slower are delegate method calls than direct method calls? To test this, we use the Action type with a single parameter.
+Overview:
+This program introduces the Method1 method, which contains some dummy code for testing.
+First:
+In the first loop, Method1 (which uses no Action) is called directly 100 million times.
+Second:
+In the second loop, an Action instance that points to Method1 is invoked the same number of times.
+C# program that tests Action invocation
+
+using System;
+using System.Diagnostics;
+
+class Program
+{
+    const int _max = 100000000;
+    static void Main()
+    {
+        // Create Action delegate for Method1.
+        Action<int> action = new Action<int>(Method1);
+
+        var s1 = Stopwatch.StartNew();
+        for (int i = 0; i < _max; i++)
+        {
+            // Direct call.
+            Method1(5);
+        }
+        s1.Stop();
+        var s2 = Stopwatch.StartNew();
+        for (int i = 0; i < _max; i++)
+        {
+            // Delegate call.
+            action.Invoke(5);
+        }
+        s2.Stop();
+        Console.WriteLine(((double)(s1.Elapsed.TotalMilliseconds * 1000 * 1000) /
+            _max).ToString("0.00 ns"));
+        Console.WriteLine(((double)(s2.Elapsed.TotalMilliseconds * 1000 * 1000) /
+            _max).ToString("0.00 ns"));
+        Console.Read();
+    }
+
+    static void Method1(int param)
+    {
+        // Dummy.
+        if (param == -1)
+        {
+            throw new Exception();
+        }
+    }
+}
+
+Output
+
+0.32 ns
+3.52 ns
+
+Notes, above benchmark. For a method with one parameter and no return value, 
+the Action invocation costs more than 3 ns extra each time. This is unlikely to cause many performance problems.
+
+Funcs. What is the difference between Action and Func? 
+The Action type receives parameters but does not return a parameter. 
+Func receives parameters and returns a result value.
+
+So:
+An Action instance never returns anything, while the Func always returns something.
+Func
+
+Abstract. Next, we compare abstract methods. An Action<int> can be an instance that points to any function that receives an int parameter.
+However:
+You can design an abstract class with an abstract method that also can be used in this way.
+Abstract
+Next:
+In the following program, we test such an abstract class against an Action<int>.
+Benchmark
+C# program that benchmarks abstract
+
+using System;
+using System.Diagnostics;
+
+abstract class A
+{
+    public abstract void MethodA(int y);
+}
+
+class AB : A
+{
+    public override void MethodA(int y)
+    {
+    }
+}
+
+class Program
+{
+    static void MethodA(int y)
+    {
+    }
+
+    static void Main()
+    {
+        A abst = new AB();
+        abst.MethodA(0);
+
+        Action<int> action = new Action<int>(MethodA);
+        action.Invoke(0);
+
+        const int max = 100000000;
+        var s1 = Stopwatch.StartNew();
+        for (int i = 0; i < max; i++)
+        {
+            abst.MethodA(i);
+            abst.MethodA(i);
+        }
+        s1.Stop();
+        var s2 = Stopwatch.StartNew();
+        for (int i = 0; i < max; i++)
+        {
+            action.Invoke(i);
+            action.Invoke(i);
+        }
+        s2.Stop();
+        Console.WriteLine(((double)(s1.Elapsed.TotalMilliseconds * 1000000) /
+            max).ToString("0.00 ns"));
+        Console.WriteLine(((double)(s2.Elapsed.TotalMilliseconds * 1000000) /
+            max).ToString("0.00 ns"));
+        Console.Read();
+    }
+}
+
+Output
+
+3.54 ns
+6.68 ns
+
+Results, above benchmark. The Action was slower to call than the method from the abstract class reference. If you can use abstract classes instead of Actions, this will be faster.
+Dictionary. It is possible to use Action as the value in a Dictionary instance. This makes it possible to call functions by a string key.
+Dictionary
+Here:
+In this example, we invoke two static void methods based on simple string keys.
+Static Method
+Idea:
+You could use a Dictionary of an abstract class. Then, instantiate each method as an instance of a derived class.
+Inheritance
+C# program that uses Dictionary with Action
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        Dictionary<string, Action> dict = new Dictionary<string, Action>();
+        dict["cat"] = new Action(Cat);
+        dict["dog"] = new Action(Dog);
+
+        dict["cat"].Invoke();
+        dict["dog"].Invoke();
+    }
+
+    static void Cat()
+    {
+        Console.WriteLine("CAT");
+    }
+
+    static void Dog()
+    {
+        Console.WriteLine("DOG");
+    }
+}
+
+Output
+
+CAT
+DOG
+
+A summary. Programs use Action for many purposes. The Action type specifies a function object that can receive parameters, but never returns a value onto the stack.
+Note:
+Thanks to Turker Tunali for helping clarify the Action descriptive text. All contributions are appreciated.
+
+Void methods. Action instances are void methods. As higher-order procedures, they can be passed around as objects. This is powerful.
