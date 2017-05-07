@@ -1,0 +1,486 @@
+Array. A prism refracts light. As white light enters, it splits apart. It becomes an array of colors. Consider a string array—we can use strings for these colors.
+Arrays are inside many things. An array has an element type. Its elements are accessed with an index. An array cannot be resized—it can only be created (and then replaced).
+Initialize Array
+
+String arrays. We begin with string arrays. Square brackets are used for all arrays. The syntax is simple and easy to remember (with practice).
+Note:
+All of these constructs are equivalent in the compiled code—choose the one you think is clearest.
+Var:
+The var type is an implicitly-typed local variable. It is the same to the compiler as an explicit string array.
+Tip:
+The fourth array allows us to test each value or insert logic as we assign it. This is sometimes useful.
+Based on: .NET 4.7 (2017)
+
+C# program that initializes string arrays
+
+class Program
+{
+    static void Main()
+    {
+        // String arrays with 3 elements.
+        string[] arr1 = new string[] { "one", "two", "three" };
+        string[] arr2 = { "one", "two", "three" };
+        var arr3 = new string[] { "one", "two", "three" };
+
+        string[] arr4 = new string[3];
+        arr4[0] = "one";
+        arr4[1] = "two";
+        arr4[2] = "three";
+    }
+}
+
+
+Int array, parameter. Here is an int array that is passed as a parameter. The entire contents of the array are not copied—just the small reference.
+Tip:
+We can think of an array as a class with a variable number of fields, each accessed with an index.
+C# program that receives array parameter
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        // Three-element array.
+        int[] array = { -5, -6, -7 };
+        // Pass array to Method.
+        Console.WriteLine(Method(array));
+    }
+
+    /// <summary>
+    /// Receive array parameter.
+    /// </summary>
+    static int Method(int[] array)
+    {
+        return array[0] * 2;
+    }
+}
+
+Output
+
+-10
+
+Return. We can return arrays from methods. In this example program, we allocate a two-element array of strings in Method(). Then, after assigning its elements, we return it.
+C# program that returns array reference
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        // Write array from Method.
+        Console.WriteLine(string.Join(" ", Method()));
+    }
+
+    /// <summary>
+    /// Return an array.
+    /// </summary>
+    static string[] Method()
+    {
+        string[] array = new string[2];
+        array[0] = "THANK";
+        array[1] = "YOU";
+        return array;
+    }
+}
+
+Output
+
+THANK YOU
+
+First. How can we get the first element? The first element is at index 0. It can be accessed by using the indexer syntax. To be safe, we often must check for empty arrays.
+C# program that gets first array element
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        int[] array = new int[2]; // Create an array.
+        array[0] = 10;
+        array[1] = 3021;
+
+        Test(array);
+        Test(null); // No output.
+        Test(new int[0]); // No output.
+    }
+
+    static void Test(int[] array)
+    {
+        if (array != null &&
+            array.Length > 0)
+        {
+            int first = array[0];
+            Console.WriteLine(first);
+        }
+    }
+}
+
+Output
+
+10
+
+Last. The last element's offset is equal to the array Length minus one. Often we need to check against null, and that the Length is greater than zero, before accessing the last element.
+C# program that gets last array element
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        string[] arr = new string[]
+        {
+            "cat",
+            "dog",
+            "panther",
+            "tiger"
+        };
+        // Get the last string element.
+        Console.WriteLine(arr[arr.Length - 1]);
+    }
+}
+
+Output
+
+tiger
+
+Foreach-loop. With this loop, no indexes are needed—the loop itself handles the indexes. This makes some code simpler. We use string interpolation to display the colors.
+Tip:
+For many programs, a foreach-loop is the clearest loop. If the logic does complicated things with indexes, use for.
+C# program that uses for each, array
+
+class Program
+{
+    static void Main()
+    {
+        string[] array = { "red", "blue", "green" };
+        // Loop with for each and write colors with string interpolation.
+        foreach (string color in array)
+        {
+            System.Console.WriteLine($"Color = {color}");
+        }
+    }
+}
+
+Output
+
+Color = red
+Color = blue
+Color = green
+
+For-loop. Here we use a for-loop to iterate over a string array. The length of this array is 2, so the valid indexes are 0 and 1. The variable "i" is set to each array index.
+C# that uses for each, for-loops on array
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        string[] array = new string[2];
+        array[0] = "Socrates";
+        array[1] = "Plato";
+        // Loop over array by indexes.
+        for (int i = 0; i < array.Length; i++)
+        {
+            string element = array[i];
+            Console.WriteLine(element);
+        }
+    }
+}
+
+Output
+
+Socrates
+Plato
+
+Empty. Here is another syntax example. To create an empty string array, we can use an empty initializer expression. Or we can specify a 0 length.
+C# that creates empty string arrays
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        // Create string array with no elements.
+        var empty1 = new string[] { };
+        Console.WriteLine(empty1.Length == 0);
+
+        // This syntax has the same result.
+        var empty2 = new string[0];
+        Console.WriteLine(empty2.Length == 0);
+    }
+}
+
+Output
+
+True
+True
+
+IndexOf. The Array class has many helpful methods—consider IndexOf. We can use this method to search an array by value. Here we find the index of the string "dog."
+Warning:
+IndexOf methods return -1 when no element is found. This value often must be checked in an if-statement.
+C# that uses Array.IndexOf
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        string[] array = { "cat", "dog", "bird", "fish" };
+
+        // The dog string is at index 1.
+        int dogIndex = Array.IndexOf(array, "dog");
+        Console.WriteLine(dogIndex);
+
+        // There is no monkey string in the array.
+        // ... So IndexOf returns -1.
+        int monkeyIndex = Array.IndexOf(array, "monkey");
+        Console.WriteLine(monkeyIndex);
+    }
+}
+
+Output
+
+1
+-1
+
+2D array. The C# language offers two-dimensional and multidimensional arrays. We also loop over 2D arrays. We use them with enumerators.
+2D Array
+
+3D array. If two dimensions are not enough, try a three-dimensional array. Even further dimensions can be added. Multidimensional arrays are rarely ideal.
+3D Array
+
+Jagged array. This is an array of arrays. It can be faster, or slower, than a 2D array based on usage. The memory required too varies. This depends on the shape of data.
+Jagged Array
+Jagged Array: Memory
+
+Class, indexer. We use arrays as fields (or properties) in classes. This is useful for storing values. In the Test class here, we have a string array field.
+Elements:
+The second part of the Test class is a property accessor. It provides a clean way for external code to access the internal array.
+Indexer:
+The final part of the Test class is called an Indexer. An indexer uses the this-keyword.
+Indexer
+Note:
+The indexer shown receives one parameter, an integer, and returns a value based on it.
+C# that uses string array in class
+
+class Program
+{
+    static void Main()
+    {
+        // Create new instance with string array.
+        Test test = new Test();
+
+        // Loop over elements with property.
+        foreach (string element in test.Elements)
+        {
+            System.Console.WriteLine(element);
+        }
+        // Get first string element.
+        System.Console.WriteLine(test[0]);
+    }
+}
+
+public class Test
+{
+    /// <summary>
+    /// String array field instance.
+    /// </summary>
+    string[] _elements = { "one", "two", "three" };
+
+    /// <summary>
+    /// String array property getter.
+    /// </summary>
+    public string[] Elements
+    {
+        get { return _elements; }
+    }
+
+    /// <summary>
+    /// String array indexer.
+    /// </summary>
+    public string this[int index]
+    {
+        get { return _elements[index]; }
+    }
+}
+
+Output
+
+one
+two
+three
+one
+
+Join, Split. The string.Join() method receives a string array and combines the strings into one. And Split() separates strings that are joined together with a delimiter char.
+Join:
+This example uses the Join method to combine the three string literals within the "elements" array.
+Join
+Split:
+Finally we invoke Split to change our joined string back into a string array. The two string arrays are separate in memory.
+Split
+C# that uses Join and Split
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        string[] elements = { "cat", "dog", "fish" };
+        Console.WriteLine(elements[0]);
+
+        // ... Join strings into a single string.
+        string joined = string.Join("|", elements);
+        Console.WriteLine(joined);
+
+        // ... Separate joined strings with Split.
+        string[] separated = joined.Split('|');
+        Console.WriteLine(separated[0]);
+    }
+}
+
+Output
+
+cat
+cat|dog|fish
+cat
+
+String args. When a C# program is started, an optional string array is received from the operating system. This array, args, contains string arguments.
+Main, Args
+Start:
+Try creating a shortcut in Windows to your C# executable. The args array is empty when no arguments are passed.
+Here:
+I added the argument string "hello world" to the command in the Windows shortcut. The two strings are received into the args array.
+C# that uses args string array
+
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // ... Loop over arguments passed to this program.
+        foreach(string value in args)
+        {
+            Console.WriteLine("Argument: {0}", value);
+        }
+        Console.ReadLine();
+    }
+}
+
+Output
+
+Argument: hello
+Argument: world
+
+Return ref, array element. With the ref keyword, we can return a reference to an array element. Here we have an int array. FirstElement returns a ref to the element at index 0.
+Then:
+We can assign the result of FirstElement to modify the array. The "codes" array is modified.
+C# that returns ref to array element
+
+class Program
+{
+    static ref int FirstElement(int[] array)
+    {
+        // Return ref to first element in array.
+        return ref array[0];
+    }
+
+    static void Main()
+    {
+        int[] codes = { 10, 20, 30 };
+
+        // Change first element to a new value.
+        FirstElement(codes) = 60;
+
+        // Display modified array.
+        for (int i = 0; i < codes.Length; i++)
+        {
+            System.Console.WriteLine(codes[i]);
+        }
+    }
+}
+
+Output
+
+60
+20
+30
+
+Types. Arrays can be of any type. We can have (for example) bool, byte, int or char arrays. And all these arrays can also be used as static fields or properties. They can be null.
+Bool Array
+Byte Array
+Char Array
+Enum Array
+Int Array
+Object Array
+
+Types, null. An array is a reference type (like a string) so it can be null. An array property often benefits from special-casing. We avoid returning null.
+Array: Null
+Array: Property, Avoid Null
+
+Types, random. We can use the Random NextBytes method to fill a byte array with random values. This does not require much custom code.
+Array: Random
+
+Types, strings. String arrays are different from other arrays. Strings are the only data type we declare with quoted values. Strings can be null. We often must convert these arrays.
+Convert Array, String
+
+Combine. Suppose two arrays exist. We can combine them. Suppose a 2D array is present. We can flatten it into a single array. An array can operated upon in nearly any way imaginable.
+Combine
+Flatten
+
+Methods. The Array type introduces many methods. We use these methods to manipulate or test arrays and their elements. We use BinarySearch—this optimizes searching a sorted array.
+AsReadOnly
+BinarySearch
+Clear
+ConstrainedCopy
+ConvertAll
+Copy
+CreateInstance
+Exists
+Find
+ForEach
+IndexOf
+LastIndexOf
+Resize
+Reverse
+Sort
+TrueForAll
+
+Methods, finding. To find things we use Array.Find with a predicate argument. We need a lambda expression. We can also use FindAll, FindIndex, FindLast and FindLastIndex.
+Array Find
+
+Properties. The most commonly used property on arrays is the Length property. With Length, we access a stored field, and no costly counting occurs. Length has no internal loops.
+Length
+IsFixedSize, IsReadOnly
+
+Counting elements. There are many ways to count array elements. The Count() extension method can be used to count elements, like the Length property.
+Count Elements
+
+ArraySegment. When we use arrays, we often want to read or write into the elements with indexes. ArraySegment helps here. It is an abstraction for part of an array.
+ArraySegment
+
+Buffer. This deals with bytes in large arrays. It is fast. The Buffer type acts upon bytes, not array elements. It is not helpful with object data.
+Buffer
+
+Performance. For the fastest programs, use arrays where possible. But if an array is resized often, a List is faster. Copying an array is a slow operation.
+Optimization
+
+IL instructions. C# programs are compiled into IL instructions. Consider a string array. To create the array reference, "newarr string" is emitted. To assign each element "stelem" is used.
+IL: newarr, stelem
+
+Research. An array is a collection of elements, all of a specific type. And these elements are stored together in memory. Each element is accessed by an integer index.
+An array is a fixed collection of same-type data that are stored contiguously and that are accessible by an index.
+Algorithms in C++ Third Edition: google.com
+Arrays are the simplest and most common type of structured data.
+Code Complete: google.com
+
+With string arrays, we store many strings together. Often a List of strings is a better choice. With int or byte arrays, we store numbers.
+A review. An array is a fixed region of memory that contains elements. Arrays store things like string references. We find them at the core of important types.
