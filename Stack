@@ -1,0 +1,242 @@
+Stack. Each element is added to the top. Each element we remove is removed from the top. This is a LIFO collection—the stack is last-in-first-out.
+The Stack can help you develop parsers quickly and also replace complex recursive algorithms. Stack is a generic type—we must specify its stored element type.
+Generic Class
+
+Push. Usually the first action you need to do on Stack is Push elements into it. The word Push is a computer science term that means "add to the top." Here we create a Stack.
+Then:
+We write each value of the stack to the Console in a foreach-loop with Console.WriteLine.
+
+Based on: .NET 4.6
+
+C# program that creates new Stack of integers
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static Stack<int> GetStack()
+    {
+        Stack<int> stack = new Stack<int>();
+        stack.Push(100);
+        stack.Push(1000);
+        stack.Push(10000);
+        return stack;
+    }
+
+    static void Main()
+    {
+        var stack = GetStack();
+        Console.WriteLine("--- Stack contents ---");
+        foreach (int i in stack)
+        {
+            Console.WriteLine(i);
+        }
+    }
+}
+
+Output
+
+--- Stack contents ---
+10000
+1000
+100
+
+Notes, above program. A local variable is assigned to a new Stack containing 3 integers. The ints were added with the 10000 last. Next in Main the values are printed out to the Console.
+Tip:
+You can see that 10000 is displayed first. This is explained by the LIFO concept—last in first out.
+LIFO:
+The last element added (with Push) to Stack is the first one removed (with Pop).
+
+Pop. Here we Pop and Peek. When you call Pop, the elements from the top of the Stack is returned, and the element is removed from the collection.
+Next:
+This example uses the same Stack collection as above, which means Pop returns 10000.
+Also:
+It uses Peek, which does the same thing as Pop but does not remove the element.
+C# program that uses Pop method
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // Get the stack.
+        // ... See above definition of this method.
+        Stack<int> stack = GetStack();
+
+        // Pop the top element.
+        int pop = stack.Pop();
+
+        // Write to the console.
+        Console.WriteLine("--- Element popped from top of Stack ---");
+        Console.WriteLine(pop);
+
+        // Now look at the top element.
+        int peek = stack.Peek();
+        Console.WriteLine("--- Element now at the top ---");
+        Console.WriteLine(peek);
+    }
+}
+
+Output
+
+--- Element popped from top of Stack ---
+10000
+--- Element now at the top ---
+1000
+
+Notes, Pop and Peek. Pop and Peek both act on the top of Stack, meaning the element most recently added. They also both return that top value.
+Peek:
+This does not remove the element from the Stack collection. It only gets the value—it "peeks" at the value.
+Pop:
+This removes the reference. If you call Pop, then afterwards Peek and Pop will return the next value when they are called.
+
+Clear, Count. Let us test more parts of Stack. The Count property is used without parentheses, while Clear() is a parameterless method. It erases the Stack's contents.
+Note:
+The example receives the Stack used in the above examples, then counts it, clears it, and finally counts it again.
+C# program that uses Clear and Count methods
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // Get the stack [See method definition above]
+        Stack<int> stack = GetStack();
+
+        // Count the number of elements in the Stack
+        int count = stack.Count;
+        Console.WriteLine("--- Element count ---");
+        Console.WriteLine(count);
+
+        // Clear the Stack
+        stack.Clear();
+        Console.WriteLine("--- Stack was cleared ---");
+        Console.WriteLine(stack.Count);
+    }
+}
+
+Output
+
+--- Element count ---
+3
+--- Stack was cleared ---
+0
+
+Null. The value null is allowed in Stacks with reference types such as string. You can also assign your Stack to null instead of calling Clear.
+Null
+Performance:
+When assigning to null, the contents are not changed. Instead the reference is unrooted in the garbage collector.
+
+Exceptions. When you call Pop or Peek on your Stack, the runtime will throw an exception if the Stack has zero elements. This can be solved.
+Tip:
+To work around this problem, you must check the Count property. Here we catch the exception raised by this situation.
+InvalidOperationException
+C# program that uses Stack incorrectly, correctly
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // Create an empty Stack.
+        var stack = new Stack<int>();
+
+        try
+        {
+            // This throws an exception.
+            int pop = stack.Pop();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("--- Exception raised by Pop ---");
+            Console.WriteLine(ex.ToString());
+        }
+
+        // Here we safely Pop the stack.
+        if (stack.Count > 0)
+        {
+            int safe = stack.Pop();
+        }
+        else
+        {
+            Console.WriteLine("--- Avoided exception by using Count method ---");
+        }
+    }
+}
+
+Output
+
+--- Exception raised by Pop ---
+System.InvalidOperationException: Stack empty.
+    ...
+    ...
+--- Avoided exception by using Count method
+
+Copy, search. You can use constructors of Stack to streamline your code. One constructor accepts an IEnumerable parameter, which is an interface that most collections implement.
+Constructor
+IEnumerable
+Also:
+We search the Stack with the Contains method. The Contains method on Stack returns true if the element is found.
+True, False
+Contains:
+With Contains we search for a string. The object reference is not compared. Instead the string contents are.
+C# program that uses the Stack constructor
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // An example string array.
+        string[] values = { "Dot", "Net", "Perls" };
+
+        // Copy an array into a Stack.
+        var stack = new Stack<string>(values);
+
+        // Display the Stack.
+        Console.WriteLine("--- Stack contents ---");
+        foreach (string value in stack)
+        {
+            Console.WriteLine(value);
+        }
+
+        // See if the stack contains "Perls"
+        Console.WriteLine("--- Stack Contains method result ---");
+        bool contains = stack.Contains("Perls");
+        Console.WriteLine(contains);
+    }
+}
+
+Output
+
+--- Stack contents ---
+Perls
+Net
+Dot
+--- Stack Contains method result ---
+True
+
+Discussion. There are several other methods on Stack in System.Collections.Generic. You can copy your Stack to a new array with ToArray(). Also, you can use TrimExcess to reduce memory.
+Internally:
+TrimExcess will check the Stack's fill rate, and then resize the internal array.
+Info:
+When looking inside Stack with IL Disassembler, we see it is implemented with an array of type T[]. This is type you specify.
+IL Disassembler
+Tip:
+Stack is basically a wrapper around an array. No boxing or unboxing will occur.
+
+Parsers. Stack can be used for parsers, such as HTML parsers. Many parsers push new elements they encounter, and then when they exit the element, they pop elements.
+Research. Stacks are well-researched in computer science literature. Method calls are stored within stacks. A pushdown stack is an abstract type that we can use in programs.
+A pushdown stack is an abstract data type that comprises two basic operations: insert (push) a new item, and remove (pop) the item that was most recently inserted.
+Algorithms in C++ Third Edition: google.com
+
+A summary. The Stack collection, found in the System.Collections.Generic namespace, provides a simple wrapper on an array. Stack is a useful abstraction of the classic stack data structure.
