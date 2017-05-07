@@ -1,0 +1,287 @@
+Sort. An elephant roams the savannah. A bird is seen in the sky. On this bird a mite lives. Animals come in all sizes—we sort them from large to small.
+For words and numbers, an order too can be imposed. To sort these in C#, we use built-in methods. We consider arrays, Lists, and even Dictionaries.
+Sort: Array
+Sort: List
+Sort: Dictionary
+
+An example. This program uses a character array of 3 chars. It calls Array.Sort on the char array reference. And the array elements are reordered.
+Tip:
+There is no need to assign to the result of Array.Sort. This would result in a compile-time error: it returns void.
+Finally:
+We use a foreach-loop upon the array elements. We print them to the console. They are in alphabetical order.
+
+Based on: .NET 4.6
+
+C# program that sorts character array
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        char[] array = { 'z', 'a', 'b' }; // Input array.
+        Array.Sort<char>(array);          // Call sort.
+        foreach (var c in array)
+            Console.WriteLine(c);
+    }
+}
+
+Output
+
+a
+b
+z
+
+Methods. There are many collection sorting methods. To make choosing even harder, there is also LINQ query syntax. LINQ introduces another entire syntax to the C# language.
+Also:
+String arrays are used frequently in sorting operations. Please find more information about this common type.
+String Array
+
+Strings. Here we call the static Array.Sort method and use it to sort a string array in-place. The result is an alphabetical sort. This console program demonstrates Array.Sort.
+Array.Sort
+Tip:
+This example is similar to the one with char arrays. In fact, they are the same except for the element data type.
+C# program that uses Array.Sort
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        string[] colors = new string[]
+        {
+            "orange",
+            "blue",
+            "yellow",
+            "aqua",
+            "red"
+        };
+        // Call Array.Sort method.
+        Array.Sort(colors);
+        foreach (string color in colors)
+        {
+            Console.WriteLine(color);
+        }
+    }
+}
+
+Output
+
+aqua
+blue
+orange
+red
+yellow
+
+Query. Next we take a string array and use a LINQ query expression to alphabetically order its contents. Please note that we order the strings, not the letters (characters) in them.
+Note:
+We see that the orderby keyword results in the same output as the Array.Sort method.
+However:
+When we use a query, it returns an IEnumerable collection. This is a collection that we enumerate (loop over) with for each.
+C# program that uses LINQ
+
+using System;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        string[] a = new string[]
+        {
+            "Indonesian",
+            "Korean",
+            "Japanese",
+            "English",
+            "German"
+        };
+        var sort = from s in a
+                   orderby s
+                   select s;
+
+        foreach (string c in sort)
+        {
+            Console.WriteLine(c);
+        }
+    }
+}
+
+Output
+
+English
+German
+Indonesian
+Japanese
+Korean
+
+Reverse query. We sort strings from Z to A, not A to Z. This is called reverse alphabetic order. LINQ here is used with a query expression.
+Ascending:
+Means to go from lowest to highest (A to Z). This is the default ordering, so we do not need to specify it.
+ascending
+Descending:
+A descending order means to go from highest to lowest (Z to A). We must explicitly specify this.
+descending
+Orderby:
+The order by keyword is not a method. Instead it compiles into a method call. It is a query clause.
+orderby
+C# program that uses LINQ descending
+
+using System;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        string[] a = new string[]
+        {
+            "French",
+            "Italian",
+            "European",
+            "Irish",
+            "Vietnamese"
+        };
+        var desc = from s in a
+                   orderby s descending
+                   select s;
+
+        foreach (string c in desc)
+        {
+            Console.WriteLine(c);
+        }
+    }
+}
+
+Output
+
+Vietnamese
+Italian
+Irish
+French
+European
+
+Collections. List and ArrayList both have sorting methods. If you want to sort a List or ArrayList, these are the best options. No conversions are needed.
+Dictionary. This collection has both keys and values, but no way to directly sort them. We can instead acquire the Keys or Values collections and sort them.
+Sort Dictionary
+
+List. This is a generic collection, with internal array storage. List not an array type in the C# language. We therefore have to use its separate Sort method.
+Also:
+We can use LINQ with the same syntax on List as used on arrays. Both arrays and Lists implement the IEnumerable interface.
+C# program that uses List
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        List<string> l = new List<string>()
+        {
+            "Australian",
+            "Mongolian",
+            "Russian",
+            "Austrian",
+            "Brazilian"
+        };
+        l.Sort();
+        foreach (string s in l)
+        {
+            Console.WriteLine(s);
+        }
+    }
+}
+
+Output
+
+Australian
+Austrian
+Brazilian
+Mongolian
+Russian
+
+Copy, sort. Many sort methods operate in-place. This means the unsorted, original collection no longer exists. To retain the original order, we must first copy the elements.
+Here:
+The List elements are sorted, but the original array is left alone. This requires the .NET Framework version 4.0 or later to compile.
+Join
+C# program that sorts copy
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        string[] array = { "zebra", "parrot", "ant" };
+
+        List<string> copy = new List<string>(array);
+        copy.Sort();
+
+        Console.WriteLine(string.Join(",", array));
+        Console.WriteLine(string.Join(",", copy));
+    }
+}
+
+Output
+
+zebra,parrot,ant
+ant,parrot,zebra
+
+Bool. A bool array is sorted from false to true. When sorting, false is considered as 0 and true is considered as 1. We can use ascending or descending sorts.
+Bool Sort
+
+Speed. I tested the sorted methods on collections of varying sizes. The performance of these methods was close. And the benchmarks were not helpful or interesting, so I removed them.
+Speed, quicksort. In these modern times, optimized algorithms are built into frameworks. The methods on this page are implemented with quicksort. They all perform similarly.
+IComparable. We can implement sorting on a class. Then when we sort a collection of that type, the custom sorting method is automatically used.
+IComparable
+
+CompareTo. This is used as part of IComparable. We test the CompareTo method in the .NET Framework. Once you understand how this works, making your own becomes easier.
+CompareTo
+
+Internals. The List sort method is implemented with Array.Sort. This is why it performs similarly to Array.Sort. To examine the internals of the method, please open it in IL Disassembler.
+IL Disassembler
+Type specifier:
+The Array.Sort method shown is a generic method. We specify the type when we call the method.
+Note:
+The C# compiler can derive the type implicitly in many cases. We do not need to always specify it.
+Generic Method
+Part of implementation of List.Sort: C#
+
+Array.Sort<T>(this._items, index, count, comparer);
+
+Reverse. Reversing an array of elements simply changes the order from back to front. It does not alphabetize or reorder the elements in an ascending or descending order.
+Reverse: Array
+Reverse: IEnumerable
+Reverse: String
+Reverse: Words
+
+Algorithms, alphanumeric. An alphanumeric sorting algorithm will treat the string "300" as greater than "31." This helps sort strings with numbers in them.
+Alphanumeric Sort
+
+Algorithms, is sorted. Is a list sorted? It is possible to sort a copy and see if the copy is equal to the original. But a simple iterative loop is faster and clearer.
+Is Sorted
+
+Algorithms, sort on properties. Sometimes we may want to sort an array based on some characteristic of each element, like a key value or property.
+Sort: File Sizes
+Sort: KeyValuePairs
+Sort: String Lengths
+Sort: Tuples
+
+Algorithms, preprocess. It is possible to modify each value before applying a sorting method. For example, leading chars can be changed.
+Sort: Ignore Leading Chars
+Sort: Number Strings
+
+Algorithms, characters. Occasionally, we need to alphabetize the letters in a string. This helps with computing anagrams for words.
+Alphabetize String
+
+Research. A common goal is a faster sorting algorithm. This is hard. Some work better than quicksort on certain data sets. But a universally faster algorithm is elusive.
+Thus:
+I recommend sticking with the .NET Framework's sorting algorithms. An alternative is to keep your data sorted as you add it.
+It is tempting to try to develop ways to improve quicksort. A faster sorting algorithm is computer science's "better mousetrap," and quicksort is a venerable method that seems to invite tinkering.
+Algorithms in C++ Third Edition: google.com
+
+A review. Sorting uses method calls. With arrays and lists, it is important to copy a collection first if we want to keep the original. With query syntax we simplify sorting.
+The .NET Framework uses quicksort. Lists and arrays (through Array.Sort) use this algorithm. They share implementations. These methods are fast, ready and tested.
