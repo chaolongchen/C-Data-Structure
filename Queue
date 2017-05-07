@@ -1,0 +1,196 @@
+Queue. What is requested first is handled first. Queue is a FIFO collection. It processes elements in a first-in, first-out order.
+To restate, Queue handles the elements that it received longest ago first. We look at several examples of the Queue generic class.
+Generic Class
+
+Enqueue example. First we add 4 ints to an instance of Queue. These could correspond to requests. We add the new requests to the end of the Queue, because they will be dealt with last.
+Int
+First-In-First-Out:
+The queue data structure implements this algorithm. Queue is a generic type with one type parameter.
+Enqueue:
+This method adds a value (of the Queue's specified element type) to the end of the Queue.
+
+Based on: .NET 4.6
+
+C# program that uses Enqueue
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // New Queue of integers.
+        Queue<int> q = new Queue<int>();
+
+        q.Enqueue(5);   // Add 5 to the end of the Queue.
+        q.Enqueue(10);  // Then add 10. 5 is at the start.
+        q.Enqueue(15);  // Then add 15.
+        q.Enqueue(20);  // Then add 20.
+    }
+}
+
+Loop example. Next we loop through the elements in the Queue. Frequently you will need to loop through the elements. We can do this is the standard way.
+Tip:
+The foreach-loop calls the Queue's enumerator, and you can use the standard foreach syntax.
+Info:
+Behind the scenes, the foreach statement is invoking the Queue's enumerator. The foreach syntax hides this.
+Foreach
+C# program that loops with Queue
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // Add integers to queue.
+        Queue<int> collection = new Queue<int>();
+        collection.Enqueue(5);
+        collection.Enqueue(6);
+
+        // Loop through queue.
+        foreach (int value in collection)
+        {
+            Console.WriteLine(value);
+        }
+    }
+}
+
+Output
+
+5
+6
+
+Help system. This code could be adapted into a help request processing system. You don't want your company's visitors to end up waiting forever. The Queue ensures this won't happen.
+Simulation:
+This example simulates a system where new help RequestTypes are added to the Queue. New requests are the last to be processed.
+C# program that uses Queue for request system
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    enum RequestType
+    {
+        MouseProblem,
+        TextProblem,
+        ScreenProblem,
+        ModemProblem
+    };
+
+    static void Main()
+    {
+        // Initialize help requeust Queue.
+        Queue<RequestType> help = new Queue<RequestType>();
+
+        // Website records a Text Problem help request.
+        help.Enqueue(RequestType.TextProblem);
+
+        // Website records a Screen Problem help request.
+        help.Enqueue(RequestType.ScreenProblem);
+
+        // You become available to take a new request.
+        // ... You can't help with Mouse problems.
+        if (help.Count > 0 &&
+            help.Peek() != RequestType.MouseProblem)
+        {
+            // You solve the request.
+            // ... It was a TextProblem.
+            help.Dequeue();
+        }
+
+        // Record a Modem Problem help request.
+        help.Enqueue(RequestType.ModemProblem);
+    }
+}
+
+Notes, oldest requests. The oldest requests, those that have been waiting the longest, are the closest to being acted on. This system ensures that no one is left hanging infinitely.
+Copy. We can copy Queue elements. We might have a Queue collection but need to loop over the elements in the reverse order. We call CopyTo, and then loop over the array in reverse.
+For
+CopyTo:
+We use CopyTo with an int array. We allocate the number of elements to the int[] with the same integer as the Queue's Count.
+For:
+We use the for-loop syntax, which gives more power when iterating over the arrays.
+Int Array
+Results:
+The array is written to the Console in front to back order, and then it is written in the opposite direction.
+Console.WriteLine
+C# program that copies Queue
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // New Queue of integers.
+        Queue<int> queue = new Queue<int>();
+        queue.Enqueue(5);
+        queue.Enqueue(10);
+        queue.Enqueue(15);
+        queue.Enqueue(20);
+
+        // Create new array with Length equal to Queue's element count.
+        int[] array = new int[queue.Count];
+
+        // Copy the Queue to the int array.
+        queue.CopyTo(array, 0);
+
+        // Loop through and display int[] in order.
+        Console.WriteLine("Array:");
+        for (int i = 0; i < array.Length; i++)
+        {
+            Console.WriteLine(array[i]);
+        }
+
+        // Loop through int array in reverse order.
+        Console.WriteLine("Array reverse order:");
+        for (int i = array.Length - 1; i >= 0; i--)
+        {
+            Console.WriteLine(array[i]);
+        }
+    }
+}
+
+Output
+
+Array:
+5
+10
+15
+20
+Array reverse order:
+20
+15
+10
+5
+
+Methods. Here are the methods and properties on the Queue. For every class you use in the C# language, please reference MSDN and other high-quality sites.
+Clear:
+Use Clear to remove all elements from the Queue. This can be used instead of assigning the reference to a new Queue.
+Contains:
+You can use Contains to search through the Queue for a matching element. This method does a linear search.
+Dequeue:
+Removes the object at the beginning of your Queue. The algorithmic complexity of this is O(1). It doesn't loop over elements.
+Peek:
+MSDN: "Returns the object at the beginning of the Queue(T) without removing it." This means you only look at the object.
+ToArray:
+Converts your Queue(T) to an array. This is similar to CopyTo, but it provides the new array reference.
+TrimExcess:
+This is supposed to minimize the Queue(T) collection's memory usage. It avoids doing anything if the Queue is > 90% full.
+Count:
+Returns the number of elements. It is in an O(1) operation, meaning it requires constant time and doesn't enumerate the elements.
+
+Notes, elegant code. Here we look at some final characteristics of the Queue. I have rarely found the collection useful. It can help in writing elegant code (even self-documenting code).
+Notes, performance. The performance of Queue, and the List.Insert method, should be tested. Using Insert on a List in the wrong way can hurt performance.
+Insert
+
+Research. Queues are everywhere in computer systems. Usually, the task that should be first done is the one that was first requested. This makes the most sense.
+FIFO queues are frequently used within computer systems to hold tasks that are yet to be accomplished when we want to provide services on a first-come, first-served basis.
+Algorithms in C++ Third Edition: google.com
+
+A summary. We saw ways to Enqueue and Dequeue elements. With Queue we could process requests on a website. This collection is useful for certain situations.
