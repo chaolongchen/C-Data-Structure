@@ -1,0 +1,133 @@
+Singletons make having single instances easy. They allow for single allocations and instances of data. We review the singleton types. We see one of the fastest implementations. And we review other possibilities.
+Example. The singleton design pattern is an interface. It is a popular class type for programs. It allows a class to enforce that it is only allocated once. This is one of the best implementations of singleton.
+Interface
+
+Based on: .NET 4.5
+
+C# program that uses singleton
+
+class Program
+{
+    static void Main()
+    {
+        SiteStructure s = SiteStructure.Instance;
+    }
+}
+
+public sealed class SiteStructure
+{
+    static readonly SiteStructure _instance = new SiteStructure();
+    public static SiteStructure Instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
+    SiteStructure()
+    {
+        // Initialize.
+    }
+}
+
+Look at where the new SiteStructure() is initialized. The readonly and static keywords are critical here. Readonly allows thread-safety, and that means it can be only allocated once. It has a public static getter.
+And:
+The public Instance property is used by callers to get the singleton instance.
+Readonly
+Property
+
+Sealed allows the compiler to perform special optimizations during JIT compilation. The final methods above are the private instance constructor and an Initialize method. Private constructors mean the class can only allocate itself.
+Sealed
+Private Constructor
+
+This implementation is fast because the instance member is created directly in its declaration. FxCop warns when you initialize a static member in a static constructor. Static constructors are slower than most constructors.
+Also:
+They cause problems. They are lazily instantiated. Every access to the class must check that the static constructor has run.
+Static Constructor
+FxCop
+
+Field example. Next, we rewrite the property to be a field. The above code block shows the singleton is using a property to be accessed. In the .NET Framework, properties are often inlined by the Common Language Runtime.
+However:
+My testing shows that by exchanging the property for a public field, the benchmark is sped up.
+C# program that uses public field, singleton
+
+using System;
+
+class SingletonB
+{
+    public static readonly SingletonB _instance = new SingletonB();
+
+    public void Test()
+    {
+        // Code runs.
+        Console.WriteLine(true);
+    }
+
+    SingletonB()
+    {
+    }
+}
+
+class Program
+{
+    public static void Main()
+    {
+        SingletonB._instance.Test();
+    }
+}
+
+Output
+
+True
+
+Timings. We are looking at tiny amounts of time here. The times for the benchmark of 1 billion iterations was 1.935 seconds versus 1.731 seconds. Using the public field is faster. Using properties slows down singletons.
+Result:
+In one million iterations of the Test function in the above version, the program completed in 1.935 seconds. That is efficient.
+Note:
+The public field is over 10% faster. I recommend skipping the public property as shown first and simply using the field.
+Singleton benchmark: 2
+
+Singleton:   Property
+Time:        1.935 s
+
+Singleton:   Public field
+Time:        1.731 s
+
+Rationale. The singleton here is worth optimizing because even tiny improvements matter. The investigation here also helps us understand how the C# compiler works to generate code. We compare public fields and properties here.
+Tip:
+I recommend reading Jon Skeet's "Implementing the Singleton" article. Singleton version 4 is as fast as any option.
+Implementing the Singleton: csharpindepth.com
+
+MSIL. What is the performance impact of using a singleton? My research found that when you access a singleton in a C# method, the static singleton Instance field must be loaded onto the evaluation stack.
+Therefore:
+Accessing a singleton always incurs a performance hit when first called in a method.
+MSIL code for singleton
+
+L_0000: ldsfld class Perls.Metadata Perls.Metadata::Instance
+L_0005: ldarg.0
+L_0006: ldloca.s data
+L_0008: callvirt instance bool Perls.Metadata::TryGetFile(string,
+    class Perls.FileData&)
+
+MSIL code for static class
+
+L_0000: ldarg.0
+L_0001: ldloca.s data
+L_0003: call bool Perls.Metadata::TryGetFile(string, class Perls.FileData&)
+
+MSIL with singleton. This MSIL is at the start of a method that uses a singleton. The singleton is called Perls.Metadata.Instance, and it is stored at a static field. The ldsfld call loads the static Instance field onto the stack.
+IL: ldsfld
+
+MSIL with static class method. Here we see the same method call as above, but using a static method and class. The MSIL generated does not use the ldsfld opcode, meaning one fewer variable is pushed onto the evaluation stack.
+Also:
+The callvirt is replaced with a call opcode. This also improves performance.
+
+Therefore, using a static class will be faster, even though micro-benchmarks don't show this normally. One fewer variable is pushed onto the stack, and the callvirt is replaced with a call, which is slightly faster.
+Research. MSDN provides an article that shows the cost in nanoseconds for static calls, instance calls, and virtual calls. Static calls are typically faster than other types of method calls.
+Writing Faster Managed Code: MSDN
+Note:
+Singletons require longer MSIL and more instructions, making them slower and causing more code bloat than statics.
+Also:
+Instead of benchmarks, which are difficult to use here because of the JIT compiler, we saw timings from MSDN and the actual MSIL.
+
+Summary. Singletons are critical to our applications. Since they are so frequently used, making them ten times faster and thread-safe is an important improvement. We explored ways to change the property to a field.
