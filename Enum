@@ -1,0 +1,399 @@
+Enum. In the forest a flower grows. This flower has many attributes. It is blooming. It is pink (not blue or yellow). A gentle wind passes through the region.
+With an enum, we can classify this plant. Consider that flowers come in all colors. It could use FlowerColor.Pink. Another one could be Blue.
+Enum example. Here is an enum that expresses importance. An enum type internally contains an enumerator list. The values (like Trivial and Critical) are ints like 1 and 4.
+Int:
+The underlying value of this enum is the default, which is int. When we use an Importance variable, we are using an int.
+
+Based on: .NET 4.6
+
+C# program that uses enums
+
+using System;
+
+class Program
+{
+    enum Importance
+    {
+        None,
+        Trivial,
+        Regular,
+        Important,
+        Critical
+    };
+
+    static void Main()
+    {
+        // ... An enum local variable.
+        Importance value = Importance.Critical;
+
+        // ... Test against known Importance values.
+        if (value == Importance.Trivial)
+        {
+            Console.WriteLine("Not true");
+        }
+        else if (value == Importance.Critical)
+        {
+            Console.WriteLine("True");
+        }
+    }
+}
+
+Output
+
+True
+
+Enum advantages. With an enum, magic constants are separate. This modular design makes things easier to understand. Fewer bugs will be introduced.
+Tip:
+Enums can be used with IntelliSense in Visual Studio. This feature will guess the value you are typing.
+Press tab:
+We can simply press tab and select the enum type we want. This is an advantage to using enum types.
+
+Debugger. Next, we examine what enums look like in the Visual Studio debugger. We see that enums are strongly-typed. You cannot assign them to just any value.
+Note:
+The debugger shows that en1 and en2 are of type Program.E. But internally, these two variables are stored as integers.
+C# program that specifies tag types with enums
+
+using System;
+
+class Program
+{
+    enum E
+    {
+        None,
+        BoldTag,
+        ItalicsTag,
+        HyperlinkTag,
+    };
+
+    static void Main()
+    {
+        // ... These values are enum E types.
+        E en1 = E.BoldTag;
+        E en2 = E.ItalicsTag;
+
+        if (en1 == E.BoldTag)
+        {
+            // Will be printed.
+            Console.WriteLine("Bold");
+        }
+        if (en1 == E.HyperlinkTag)
+        {
+            // Won't be printed.
+            Console.WriteLine("Not true");
+        }
+    }
+}
+
+Output
+
+Bold
+
+Strings. We convert enums to strings for display on the Console. Enum values always have a name, such as E.None, E.BoldTag or E.ItalicsTag.
+Tip:
+To print out the enum values, you can call ToString on the enum variable in a program.
+Also:
+Another method such as Console.WriteLine can automatically call the ToString method.
+C# program that writes enums
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        // ... Two enum variables.
+        B b1 = B.Dog;
+        V v1 = V.Hidden;
+
+        // ... Print out their values.
+        Console.WriteLine(b1);
+        Console.WriteLine(v1);
+    }
+
+    enum V
+    {
+        None,
+        Hidden = 2,
+        Visible = 4
+    };
+
+    enum B
+    {
+        None,
+        Cat = 1,
+        Dog = 2
+    };
+}
+
+Output
+
+Dog
+Hidden
+
+ToString. Console.WriteLine will call the ToString method on all types passed to it. Internally, ToString invokes methods that use reflection to acquire the string representation.
+Enum ToString
+
+A warning. Some examples here use short, letter-based identifiers (b1, v2) for variables. These are not ideal. It is better to use more descriptive words, such as "animal" or "visibility."
+Parse. Sometimes we have a string value that we want to convert to an equivalent enum. This could happen when accepting user input.
+Tip:
+When using the .NET Framework, calling a built-in method to do conversions (where one exists) is usually best.
+Enum.Parse:
+The tricky part of using this method involves typeof and casting. It is best to avoid this if possible.
+Enum.Parse
+
+GetName, Getnames. Built-in methods get strings that represent enums. With GetName, we can get the name for an enum value. With GetNames we get all the string representations at once.
+Enum.GetName
+
+Format enums. It is possible to format the values stored in enums in different ways. We can display an integer representation, or a hex representation.
+Enum.Format
+
+Switch. The above samples show if-statements used with enums. But switch in the C# language is sometimes compiled to more efficient IL.
+Switch Enum
+Here:
+The IsFormat method works as a filter that tells us something about sets of enum values.
+Logic:
+We can separate the logic here instead of repeating ourselves. This helps clarify the program logic.
+C# program that uses switch, enums
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        // ... Test enum with switch method.
+        G e1 = G.None;
+        if (IsFormat(e1))
+        {
+            // Won't succeed.
+            // ... G.None is not a format value.
+            Console.WriteLine("Error");
+        }
+
+        // ... Test another enum with switch.
+        G e2 = G.ItalicsFormat;
+        if (IsFormat(e2))
+        {
+            // Will succeed.
+            // ... G.ItalicsFormat is a format value.
+            Console.WriteLine("True");
+        }
+    }
+
+    enum G
+    {
+        None,
+        BoldFormat,    // Is a format value.
+        ItalicsFormat, // Is a format value.
+        Hyperlink      // Not a format value.
+    };
+
+    /// <summary>
+    /// Returns true if the G enum value is a format value.
+    /// </summary>
+    public static bool IsFormat(G e)
+    {
+        switch (e)
+        {
+            case G.BoldFormat:
+            case G.ItalicsFormat:
+                {
+                    // These two values are format values.
+                    return true;
+                }
+            default:
+                {
+                    // The argument is not a format value.
+                    return false;
+                }
+        }
+    }
+}
+
+Output
+
+True
+
+Default. Values are always initialized to zero when they are fields of a class. Upon class creation, an enum field will also be initialized to zero (and the equivalent value).
+Tip:
+To make enums valid, always use the default value of zero. This way, we can test for the default value of fields.
+Sometimes:
+This issue is not worth fixing. But it is often useful for verifying correctness.
+Enum with default value of None
+
+enum E
+{
+    None,
+    A,
+    B,
+    C
+};
+
+FxCop. This is a code analysis tool released by Microsoft. It helps us improve certain issues in code. It will tell us that "enums should have zero value."
+A non-flags attributed enumeration should define a member with the value of zero so that the default value is a valid value of the enumeration. If appropriate, name the member None.
+Enums should have zero value: MSDN
+
+Collections. Here we apply the Stack collection in the .NET Framework. With Stack, we can develop a parser that keeps the most recently encountered enum value on the top.
+Stack:
+The Stack here can only have E-type values added to it. This is an example of type checking and validation.
+Stack
+Pop:
+With the Pop method we get the top element from the stack. This is of type E.ItalicsTag.
+Result:
+In the execution of this program, the stack has two enums added and one removed.
+C# program that uses Stack with enums
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        M();
+    }
+
+    enum E
+    {
+        None,         // integer value = 0
+        BoldTag,      // 1
+        ItalicsTag,   // 2
+        HyperlinkTag, // 3
+    };
+
+    static public void M()
+    {
+        // ... Stack of enums.
+        Stack<E> stack = new Stack<E>();
+
+        // ... Add enum values to the Stack.
+        stack.Push(E.BoldTag); // Add bold.
+        stack.Push(E.ItalicsTag); // Add italics.
+
+        // ... Get the top enum value.
+        E thisTag = stack.Pop(); // Get top tag.
+        Console.WriteLine(thisTag);
+    }
+}
+
+Output
+
+ItalicsTag
+
+Type. An enum has an underlying type. Each time we use the enum, we are using the underlying type. The enum has syntactic sugar on top.
+Int:
+Enums are by default an int type, but we can adjust this to a different numeric type.
+Byte:
+Here we create an enum with a type of byte. This is sometimes useful on small enums. A byte can only contain 256 different values.
+Byte
+Memory:
+The CoffeeSize enum will use memory equivalent to a byte. This can make classes more efficient and smaller.
+C# program that uses underlying type
+
+using System;
+
+class Program
+{
+    enum CoffeeSize : byte
+    {
+        None,
+        Tall,
+        Venti,
+        Grande
+    };
+
+    static void Main()
+    {
+        // ... Create a coffee size local.
+        CoffeeSize size = CoffeeSize.Venti;
+        Console.WriteLine(size);
+    }
+}
+
+Output
+
+Venti
+
+GetUnderlyingType. We can determine an enum's type (like int) at runtime. Enum.GetUnderlyingType, a static method, determines the underlying type.
+Static Method
+Next:
+We declare an enum Importance. For this example it uses an underlying type of byte.
+Then:
+When the GetUnderlyingType method is called, the System.Byte type is returned.
+C# that uses GetUnderlyingType
+
+using System;
+
+class Program
+{
+    enum Importance : byte
+    {
+        Low,
+        Medium,
+        High
+    };
+
+    static void Main()
+    {
+        // Determine the underlying type of the enum.
+        Type type = Enum.GetUnderlyingType(typeof(Importance));
+        Console.WriteLine(type);
+    }
+}
+
+Output
+
+System.Byte
+
+Null, none. An enum value cannot be null. It is a value type like an int. To avoid the "cannot convert null" error, use a special None constant as the first enum item.
+C# that causes null error
+
+enum Color
+{
+    None,
+    Blue,
+    Red
+}
+
+class Program
+{
+    static void Main()
+    {
+        Color c = null;
+    }
+}
+
+Results
+
+Error CS0037
+Cannot convert null to 'Color' because it is a non-nullable value type
+
+C# program that uses None enum
+
+enum Color
+{
+    None,
+    Blue,
+    Red
+}
+
+class Program
+{
+    static void Main()
+    {
+        Color c = Color.None;
+    }
+}
+
+Flags. The language allows us to specify a Flags attribute on an enum. This enables the enum to be used as a bit field. We can use combinations of enum values this way.
+Flags
+
+Arrays. Enums are values. We can use enums to index arrays. This approach is useful for some kinds of tables or data structures in programs.
+Enum Array
+
+Performance. Enums are fast. They are almost never a performance concern. They are just syntactic sugar on a type like int, which is also fast.
+Enum Performance
+
+Memory. Suppose we develop a class that has an enum field. The underlying type of this enum contributes to how much memory the class will use.
+Memory, continued. A smaller type (such as byte) will make class instances that hold the enum smaller. Thousands of class instances are required before this optimization is important.
+A review. Enums enhance clarity and reduce the probability of invalid constants. We use them to represent constant values (such as integers) in a consistent way.
