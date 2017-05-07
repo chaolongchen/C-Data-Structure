@@ -1,0 +1,103 @@
+Array Slice. A slice of an array is a range of elements. By using extension methods and generics, we simplify and clarify array slices. This makes for more reusable and powerful code. We write and test an array slice method.
+Example. To start, here we see a generic method, which is simply a C# method that can receive and return parameters of any type. Our Slice method here uses this ability to simulate the built-in slice functionality of Python and other languages.
+C# program that slices array
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        int[] a = new int[]
+        {
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+        };
+        foreach (int i in a.Slice(0, 1))
+        {
+            Console.WriteLine(i);
+        }
+        Console.WriteLine();
+        foreach (int i in a.Slice(0, 2))
+        {
+            Console.WriteLine(i);
+        }
+        Console.WriteLine();
+        foreach (int i in a.Slice(2, 5))
+        {
+            Console.WriteLine(i);
+        }
+        Console.WriteLine();
+        foreach (int i in a.Slice(2, -3))
+        {
+            Console.WriteLine(i);
+        }
+    }
+}
+
+public static class Extensions
+{
+    /// <summary>
+    /// Get the array slice between the two indexes.
+    /// ... Inclusive for start index, exclusive for end index.
+    /// </summary>
+    public static T[] Slice<T>(this T[] source, int start, int end)
+    {
+        // Handles negative ends.
+        if (end < 0)
+        {
+            end = source.Length + end;
+        }
+        int len = end - start;
+
+        // Return new array.
+        T[] res = new T[len];
+        for (int i = 0; i < len; i++)
+        {
+            res[i] = source[i + start];
+        }
+        return res;
+    }
+}
+
+Output
+
+1
+
+1
+2
+
+3
+4
+5
+
+3
+4
+
+In the Main method, we see the new Slice extension method used. We are using an int array with seven values in it. The first slice we take extracts the elements between 0 and 1, the first int.
+The Extensions class contains a public static method called Slice. It is an extension method, which means it must use the this-keyword in its first parameter (this T[] source). You can find more about declaring custom extension methods.
+Extension Method Examples
+Also:
+The other confusing part is the use of the letter T. The Type T is replaced by the C# compiler with any type you specify.
+
+When the letter T (or letters such as V and C) appears in the <sharp> brackets after a method name, you are using a generic method. This signals to the compiler that the letter T is replaced with the type specified at the call site.
+Generic Method
+
+Discussion. How is this method different from LINQ Take and Skip? First, it can deal with negative parameters as does JavaScript and Python. Second, it may be faster before it doesn't use IEnumerable, which has a performance penalty.
+Take, TakeWhile
+Skip, SkipWhile
+
+The implementation of the Slice method here had a serious bug that caused negative end parameters to be incorrectly handled. James Kolpack wrote in with a correction of the end computation and I added a test for that case.
+Note:
+Dot Net Perls thanks James and all contributors who notice the many errors on this site.
+Strings:
+In my development efforts, I have also used string slice methods, which are proven equivalent in the main aspects to JavaScript.
+String Slice
+
+Summary. Here we saw a generic array slice method that is also an extension method, combining several concepts from newer versions of the C# language. This is a rare case where an extension method is appropriate.
