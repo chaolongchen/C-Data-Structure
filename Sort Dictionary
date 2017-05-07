@@ -1,0 +1,166 @@
+Sort Dictionary. Dictionary has no Sort method. If we need to loop through the Dictionary contents in sorted order, we must separately acquire the elements and sort them.
+Sorting approaches. We can sort a Dictionary with the Keys and Values properties and a List instance. Some approaches are slower than others.
+An example. An example Dictionary is created. We apply the Keys property on the Dictionary instance. Then we use the ToList extension method and the Sort instance method.
+ToList
+Next:
+The ToList and Sort methods are used on the Keys. The resulting List is looped through using the foreach-loop construct.
+Note:
+The var implicit typed keyword is used throughout to reduce syntactic redundancy.
+
+Based on: .NET 4.6
+
+C# program that sorts keys in Dictionary
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        // Create dictionary and add five keys and values.
+        var dictionary = new Dictionary<string, int>();
+        dictionary.Add("car", 2);
+        dictionary.Add("apple", 1);
+        dictionary.Add("zebra", 0);
+        dictionary.Add("mouse", 5);
+        dictionary.Add("year", 3);
+
+        // Acquire keys and sort them.
+        var list = dictionary.Keys.ToList();
+        list.Sort();
+
+        // Loop through keys.
+        foreach (var key in list)
+        {
+            Console.WriteLine("{0}: {1}", key, dictionary[key]);
+        }
+    }
+}
+
+Output
+
+apple: 1
+car: 2
+mouse: 5
+year: 3
+zebra: 0
+
+Sort values. This program adds keys to a Dictionary and then sorts them by their values. Dictionary instances are not initially sorted. We use the orderby keyword in a query statement.
+orderby
+C# program that sorts Dictionary
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        // Example dictionary.
+        var dictionary = new Dictionary<string, int>(5);
+        dictionary.Add("cat", 1);
+        dictionary.Add("dog", 0);
+        dictionary.Add("mouse", 5);
+        dictionary.Add("eel", 3);
+        dictionary.Add("programmer", 2);
+
+        // Order by values.
+        // ... Use LINQ to specify sorting by value.
+        var items = from pair in dictionary
+                    orderby pair.Value ascending
+                    select pair;
+
+        // Display results.
+        foreach (KeyValuePair<string, int> pair in items)
+        {
+            Console.WriteLine("{0}: {1}", pair.Key, pair.Value);
+        }
+
+        // Reverse sort.
+        // ... Can be looped over in the same way as above.
+        items = from pair in dictionary
+                orderby pair.Value descending
+                select pair;
+    }
+}
+
+Output
+
+dog: 0
+cat: 1
+programmer: 2
+eel: 3
+mouse: 5
+
+Notes, above program. First it declares an example Dictionary. The Dictionary keys are strings. Its values are ints. We will reorder the values to go from lowest to highest.
+Notes, continued. It accesses the KeyValuePairs in a query. It displays results, using foreach to iterate through and display each KeyValuePair. No additional lookups are required.
+LINQ
+Var
+KeyValuePair
+Note:
+Thanks to Jon Senchyna for improving the query expression. It is more efficient to use the collection of KeyValuePairs.
+
+OrderBy. Another option is the OrderBy extension method in System.Linq. This approach compiles to the same code as the orderby query expression.
+Tip:
+Here the syntax is shorter. It requires only one lambda expression and method call.
+Lambdas
+C# program that uses OrderBy method
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        var items = new Dictionary<int, int>();
+        items.Add(-1, 0);
+        items.Add(0, 1);
+        items.Add(-2, 0);
+        items.Add(3, 1);
+
+        // Use OrderBy method.
+        foreach (var item in items.OrderBy(i => i.Key))
+        {
+            Console.WriteLine(item);
+        }
+    }
+}
+
+Output
+
+[-2, 0]
+[-1, 0]
+[0, 1]
+[3, 1]
+
+Notes, above program. The program could, with certain changes, raise a KeyNotFoundException. You will want to trap those errors with exception handling—try and catch.
+Exception
+Note:
+Thanks to Even Holen for writing in with an example of the shorter OrderBy syntax form.
+
+Tip, opposite direction. It is possible and easy to sort in the opposite direction. Replace ascending with descending. When you omit the direction keyword, it will use ascending.
+Descending
+Descending sort:
+
+var items = from pair in dictionary
+            orderby pair.Value descending
+            select pair;
+
+Output
+
+mouse: 5
+eel: 3
+programmer: 2
+cat: 1
+dog: 0
+
+Notes, other methods. Other methods I found involve more steps, code or complexity. There is nothing wrong with those methods, although they vary in efficiency.
+Sort string values. Sorting strings would work just as well. Sort() uses the interface implementations of the types. Its syntax is the same for any type that List.Sort() could sort.
+IComparable
+
+A summary. Dictionary is optimized for fast lookups, not for specific looping mechanisms. It helps in lookup-heavy programs, but hinders programs that require sorted keys.
