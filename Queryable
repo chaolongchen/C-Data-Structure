@@ -1,0 +1,80 @@
+Queryable. What is the IQueryable interface used for? We find a Queryable class, an IQueryable interface, and an AsQueryable extension method.
+Internal development. The IQueryable class is used to develop LINQ query providers. This feature is used to develop the .NET Framework itself.
+A Queryable example. Here we have an int array and use AsQueryable (an extension method) on it. This gives us an IQueryable reference.
+And:
+We call Queryable.Average (a static method) with our IQueryable interface reference.
+Interface
+
+Based on: .NET 4.7 (2017)
+
+C# program that uses Queryable
+
+using System;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        var values = new int[] { 5, 10, 20 };
+        // We can convert an int array to IQueryable.
+        // ... And then we can pass it to Queryable and methods like Average.
+        double result = Queryable.Average(values.AsQueryable());
+        Console.WriteLine(result);
+    }
+}
+
+Output
+
+11.6666666666667
+
+IQueryable. The IQueryable interface inherits from IEnumerable. We can use IQueryable in a similar way as IEnumerable to act upon collections of elements with a unified type.
+Warning:
+There is no advantage to using IQueryable over IEnumerable here. And it is simpler to use IEnumerable.
+IEnumerable
+C# program that uses IQueryable as argument type
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        // List and array can be converted to IQueryable.
+        List<int> list = new List<int>();
+        list.Add(0);
+        list.Add(1);
+
+        int[] array = new int[2];
+        array[0] = 0;
+        array[1] = 1;
+
+        // We can use IQueryable to treat collections with one type.
+        Test(list.AsQueryable());
+        Test(array.AsQueryable());
+    }
+
+    static void Test(IQueryable<int> items)
+    {
+        Console.WriteLine($"Average: {items.Average()}");
+        Console.WriteLine($"Sum: {items.Sum()}");
+    }
+}
+
+Output
+
+Average: 0.5
+Sum: 1
+Average: 0.5
+Sum: 1
+
+Some research. So what are some practical uses of IQueryable? Based on my research, IQueryable is used to implement LINQ providers for the .NET Framework internals.
+So:
+IQueryable, and AsQueryable, are most useful for Framework developers, not users of the .NET Framework.
+The IQueryable interface is intended for implementation by query providers. It is only supposed to be implemented by providers that also implement IQueryable<T>.
+IQueryable Interface: Microsoft.com
+
+Research, continued. Development of an IQueryable class appears to be both complicated and difficult. It is probably best left to the implementors of the .NET Framework.
+A summary. The .NET Framework contains features that are used for the development of the .NET Framework itself. Other features like "dynamic" are also focused on framework development.
