@@ -1,0 +1,210 @@
+Enum.Parse converts strings to enum values. It is useful in programs that accept user input as a string, but store the value internally as an enum. An enum is a more efficient representation. Enum.TryParse too is covered.
+Example. The Enum.Parse method is a static method in the System namespace, so you will need to include System at the top of your file or use the fully qualified name. The program shows an enum type containing a constant Dog with value of 2.
+And:
+When the string "Dog" is parsed with Enum.Parse, you get the PetType.Dog enum value. The tricky part is using typeof and casting.
+Static Method
+
+Based on: .NET 4.6
+
+C# program that parses enums
+
+using System;
+
+class Program
+{
+    enum PetType
+    {
+        None,
+        Cat = 1,
+        Dog = 2
+    }
+
+    static void Main()
+    {
+        // A.
+        // Possible user input:
+        string value = "Dog";
+
+        // B.
+        // Try to convert the string to an enum:
+        PetType pet = (PetType)Enum.Parse(typeof(PetType), value);
+
+        // C.
+        // See if the conversion succeeded:
+        if (pet == PetType.Dog)
+        {
+            Console.WriteLine("Equals dog.");
+        }
+    }
+}
+
+Output
+
+Equals dog.
+
+In part A, the string here contains the value "Dog". In part B, it uses Enum.Parse. The typeof(PetType) part returns the type of the PetType enum declaration. The string is passed as the second argument.
+Finally:
+We cast the result of Enum.Parse to the PetType enum type. And in part C, it tests the result.
+Result:
+We see here that the Enum.Parse call was successful and the value is equal to PetType.Dog.
+Typeof, nameof
+
+Exceptions. An exception may be raised when parsing enums. When the contents of the string you try to parse is not represented in the enum, you must handle the exception. Handling exceptions is important. We see an example in this tutorial.
+C# program that shows enum exceptions
+
+using System;
+
+class Program
+{
+    enum PetType
+    {
+        None,
+        Cat = 1,
+        Dog = 2
+    }
+
+    static void Main()
+    {
+        // The enum doesn't contain this value.
+        string value = "Bat";
+
+        // 1.
+        // Try to convert the string to an enum.
+        PetType pet;
+        try
+        {
+            pet = (PetType)Enum.Parse(typeof(PetType), value);
+        }
+        catch (Exception ex)
+        {
+            // The conversion failed.
+            Console.WriteLine("FAILED");
+            Console.WriteLine(ex.Message);
+
+            // Set fallback value.
+            pet = PetType.None;
+        }
+
+        // 2.
+        // See if the conversion succeeded.
+        if (pet == PetType.Dog)
+        {
+        }
+    }
+}
+
+Output
+
+FAILED
+Requested value 'Bat' was not found.
+
+Please look at the try-catch block. The example catches all errors, which is sufficient for many small applications. The string in the example isn't found in the enum PetType, so the enum variable is set to PetType.None.
+Note:
+This is the fallback behavior. For important applications, you will log the exception.
+Try
+Catch
+
+Enum.TryParse. Next, we examine the Enum.TryParse method. In this program please notice the names of the enumerated constants. Before calling Enum.TryParse, you can declare a variable of the enum type. You do not need to initialize it.
+Then:
+Test the result of Enum.TryParse for true or false. If the method returns true, then the string was successfully parsed.
+C# program that uses Enum.TryParse method
+
+using System;
+
+enum Importance
+{
+    None,
+    Low,
+    Medium,
+    Critical
+}
+
+class Program
+{
+    static void Main()
+    {
+        // The input value.
+        string value = "Medium";
+
+        // An unitialized variable.
+        Importance importance;
+
+        // Call Enum.TryParse method.
+        if (Enum.TryParse(value, out importance))
+        {
+            // We now have an enum type.
+            Console.WriteLine(importance == Importance.Medium);
+        }
+    }
+}
+
+Output
+
+True
+
+Quirk with string numbers. The Enum.TryParse method will parse a string representation of a number as an enum value. This behavior might not be expected. Please consider using the Enum.IsDefined method to test.
+Tip:
+Whenever you have a string that you want to convert into an enum, consider using the Enum.TryParse static method.
+TryParse:
+This method provides a clear and useful calling convention, the tester-doer pattern. It requires the .NET Framework 4.0.
+C# program that shows Enum.TryParse quirk
+
+using System;
+
+enum Importance
+{
+    None = 0,
+    Low = 1
+}
+
+class Program
+{
+    static void Main()
+    {
+        Importance importance;
+
+        // ... Try to parse the string "1".
+        if (Enum.TryParse("1", out importance))
+        {
+            // ... "1" is treated as "Low".
+            Console.WriteLine(importance);
+        }
+    }
+}
+
+Output
+
+Low
+
+Enum.IsDefined. The Enum.IsDefined method can be used with the Enum.TryParse method. Please consider calling Enum.TryParse before calling IsDefined. If TryParse returns true, and IsDefined succeeds, you have a correct string value.
+Note:
+Thanks to Thorsten Pontow and Rob for providing information about how to use Enum.IsDefined with Enum.TryParse.
+The following example defines a Colors enumeration, calls the TryParse... method to convert strings to their corresponding enumeration values, and calls the IsDefined method.
+Enum.TryParse: MSDN
+C# program that uses Enum.IsDefined
+
+using System;
+
+enum Importance
+{
+    None = 0,
+    Low = 1
+}
+
+class Program
+{
+    static void Main()
+    {
+        // ... "1" is not defined.
+        // ... "Low" is defined.
+        Console.WriteLine(Enum.IsDefined(typeof(Importance), "1"));
+        Console.WriteLine(Enum.IsDefined(typeof(Importance), "Low"));
+    }
+}
+
+Output
+
+False
+True
+
+Summary. We can use the Enum.Parse static method with the typeof operator result as the first parameter and the string input as the second parameter. We saw a successful call to Enum.Parse—and one that failed and threw an exception.
