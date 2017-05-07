@@ -1,0 +1,213 @@
+ConcurrentDictionary handles multiple threads. This type from the System.Collections.Concurrent namespace allows multiple threads to access a Dictionary instance. With it, you get a thread-safe, hash-based lookup algorithm.
+Note:
+The ConcurrentDictionary type resides in System.Collections.Concurrent. It was introduced in .NET 4.0.
+Note 2:
+It makes adding, removing and updating values in a lookup table on multiple threads easier.
+
+These two programs compare ConcurrentDictionary and Dictionary when adding keys and values. With ConcurrentDictionary, we use the TryAdd method. This does nothing if the key is already found. It returns true if something was added.
+And:
+In the Dictionary program, we use the Add method. The Dictionary program will fail—you cannot Add an existing element.
+
+Based on: .NET 4.6
+
+C# program that uses ConcurrentDictionary
+
+using System;
+using System.Collections.Concurrent;
+using System.Linq;
+using System.Threading;
+
+class Program
+{
+    static ConcurrentDictionary<string, int> _concurrent =
+        new ConcurrentDictionary<string, int>();
+
+    static void Main()
+    {
+        Thread thread1 = new Thread(new ThreadStart(A));
+        Thread thread2 = new Thread(new ThreadStart(A));
+        thread1.Start();
+        thread2.Start();
+        thread1.Join();
+        thread2.Join();
+        Console.WriteLine("Average: {0}", _concurrent.Values.Average());
+    }
+
+    static void A()
+    {
+        for (int i = 0; i < 1000; i++)
+        {
+            _concurrent.TryAdd(i.ToString(), i);
+        }
+    }
+}
+
+C# program that uses Dictionary
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+
+class Program
+{
+    static Dictionary<string, int> _dictionary = new Dictionary<string, int>();
+
+    static void Main()
+    {
+        Thread thread1 = new Thread(new ThreadStart(A));
+        Thread thread2 = new Thread(new ThreadStart(A));
+        thread1.Start();
+        thread2.Start();
+        thread1.Join();
+        thread2.Join();
+        Console.WriteLine("Average: {0}", _dictionary.Values.Average());
+    }
+
+    static void A()
+    {
+        for (int i = 0; i < 1000; i++)
+        {
+            _dictionary.Add(i.ToString(), i);
+        }
+    }
+}
+
+Try methods. Try methods attempt to perform an action upon the contents of the collection, but return false if they cannot. The reason they cannot do something is usually because the given key is invalid. It may have been changed on another thread.
+TryAdd:
+This method is the same as the Add method on Dictionary except it doesn't throw an exception if the key is already present.
+TryGetValue:
+This is the same as the TryGetValue method on the Dictionary type from System.Collections.Generic.
+TryRemove:
+This is different from the Dictionary Remove method. It has a second, out parameter that returns the value that was removed.
+TryUpdate:
+This can be used to update a key with the value you provide to a new value. See the below example.
+
+TryUpdate. In this example, the first call to TryUpdate doesn't do anything, because the value of "cat" is not equal to 4. The second call, though, does change the value from 1 to 100 because its value was set to 1.
+C# program that tests TryUpdate
+
+using System;
+using System.Collections.Concurrent;
+
+class Program
+{
+    static void Main()
+    {
+        // New instance.
+        var con = new ConcurrentDictionary<string, int>();
+        con.TryAdd("cat", 1);
+        con.TryAdd("dog", 2);
+
+        // Try to update if value is 4 (this fails).
+        con.TryUpdate("cat", 200, 4);
+
+        // Try to update if value is 1 (this works).
+        con.TryUpdate("cat", 100, 1);
+
+        // Write new value.
+        Console.WriteLine(con["cat"]);
+    }
+}
+
+Output
+
+100
+
+AddOrUpdate, GetOrAdd. Conceptually, the AddOrUpdate method will always result in a value change in the collection. The GetOrAdd method, on the other hand, is the same as AddOrUpdate except it will not change the existing value: it will only return it.
+C# program that uses AddOrUpdate and GetOrAdd
+
+using System;
+using System.Collections.Concurrent;
+
+class Program
+{
+    static void Main()
+    {
+        // New instance.
+        var con = new ConcurrentDictionary<string, int>();
+        con.TryAdd("cat", 1);
+        con.TryAdd("dog", 2);
+
+        // Add dog with value of 5 if it does NOT exist.
+        // ... Otherwise, add one to its value.
+        con.AddOrUpdate("dog", 5, (k, v) => v + 1);
+
+        // Display dog value.
+        Console.WriteLine(con["dog"]);
+
+        // Get mouse or add it with value of 4.
+        int mouse = con.GetOrAdd("mouse", 4);
+        Console.WriteLine(mouse);
+
+        // Get mouse or add it with value of 660.
+        mouse = con.GetOrAdd("mouse", 660);
+        Console.WriteLine(mouse);
+    }
+}
+
+Output
+
+3
+4
+4
+
+The point of these methods is to resolve problems with the nature of time in concurrent systems. With multiple threads, you cannot predict what elements will be found in the collection at any point of execution.
+Note:
+These fail-safe methods ensure the collection will not become corrupted or invalid even if you cannot predict its contents.
+
+ToArray. The ToArray method on the ConcurrentDictionary type yields an array of KeyValuePair structs. For more information on KeyValuePair, please check out the specific article on this website.
+KeyValuePair
+
+IsEmpty. Conceptually, the IsEmpty property is equivalent to the expression Count == 0. The collection can never contain a negative number of elements, and is only empty when there are zero elements.
+Performance. How fast is ConcurrentDictionary? I tested its lookup performance with TryGetValue against a regular Dictionary. In the simple benchmark, 2000 string keys are assigned to ints. Then the key "100" is looked up and timed.
+Benchmark
+ConcurrentDictionary initialization: C#
+
+ConcurrentDictionary<string, int> c = new ConcurrentDictionary<string, int>();
+for (int i = 0; i < 2000; i++)
+{
+    c[i.ToString()] = i;
+}
+
+Dictionary initialization: C#
+
+Dictionary<string, int> d = new Dictionary<string, int>();
+for (int i = 0; i < 2000; i++)
+{
+    d[i.ToString()] = i;
+}
+
+ConcurrentDictionary usage: C#
+
+int v;
+if (c.TryGetValue("100", out v))
+{
+    if (v != 100)
+    {
+        throw new Exception();
+    }
+}
+
+Dictionary usage: C#
+
+int v;
+if (d.TryGetValue("100", out v))
+{
+    if (v != 100)
+    {
+        throw new Exception();
+    }
+}
+
+Results
+
+74.50 ns    ConcurrentDictionary
+43.40 ns    Dictionary
+
+I found that the ConcurrentDictionary was almost twice as slow as the regular Dictionary. The overhead in ConcurrentDictionary was small. I was expecting it to perform worse. Its performance would not interfere in many programs.
+Dictionary. There are more methods on the ConcurrentDictionary, but these have the same behavior as the methods found on the Dictionary. These members include Clear, ContainsKey, Count, GetEnumerator, Keys, and Values.
+ContainsKey
+Dictionary
+Dictionary GetEnumerator
+
+Summary. We looked at the ConcurrentDictionary type and its intended usage. By facilitating error-free code in programs that use multiple threads, the ConcurrentDictionary can enhance lookup performance in complex, time-critical software.
