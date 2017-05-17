@@ -1,0 +1,368 @@
+StringBuilder. A string can be appended to a million times. This works but is slow. Its contents are copied each time data is appended.
+Unlike a string, a StringBuilder can be changed. With it, an algorithm that modifies characters in a loop runs fast. Many string copies are avoided.
+An intro. This program uses StringBuilder to build up a buffer of characters. We call Append to add more data to our StringBuilder.
+Append:
+The Append method can be called directly on its own result, in the same statement.
+Because:
+Append(), and other methods like AppendFormat, return the same StringBuilder.
+
+Based on: .NET 4.6
+
+C# program that uses StringBuilder
+
+using System;
+using System.Text;
+
+class Program
+{
+    static void Main()
+    {
+        StringBuilder builder = new StringBuilder();
+        // Append to StringBuilder.
+        for (int i = 0; i < 10; i++)
+        {
+            builder.Append(i).Append(" ");
+        }
+        Console.WriteLine(builder);
+    }
+}
+
+Output
+
+0 1 2 3 4 5 6 7 8 9
+
+Methods. Next, we look at other essential methods on StringBuilder. The methods shown here allow us to use it effectively in many programs. We append strings and lines.
+Note:
+This example shows no loop, and is not ideal as a program. It is for demonstration purposes.
+Append:
+Adds the contents of its argument to the buffer in the StringBuilder. Arguments are converted to strings with ToString.
+Append
+AppendLine:
+This does the same thing as Append, except with a newline on the end. We use a terse syntax form.
+AppendLine
+ToString:
+This returns the buffer. We will almost always want ToString—it will return the contents as a string.
+C# program that uses StringBuilder methods
+
+using System;
+using System.Text;
+using System.Diagnostics;
+
+class Program
+{
+    static void Main()
+    {
+        // Declare a new StringBuilder.
+        StringBuilder builder = new StringBuilder();
+        builder.Append("The list starts here:");
+        builder.AppendLine();
+        builder.Append("1 cat").AppendLine();
+
+        // Get a reference to the StringBuilder's buffer content.
+        string innerString = builder.ToString();
+
+        // Display with Debug.
+        Debug.WriteLine(innerString);
+    }
+}
+
+Output
+
+The list starts here:
+1 cat
+
+Memory. In garbage-collected systems, there is memory pressure. As more temporary objects are created, garbage collection runs more often. This slows a program down.
+Tip:
+StringBuilder creates fewer temporary objects than string appends. Thus it adds less memory pressure.
+StringBuilder Memory
+
+Replace. This method replaces all instances of one string with another. A string is required, but we do not need to use a string literal. The example exchanges "an" with "the."
+Caution:
+The Replace method will replace all instances of the specified value. To replace one instance, we will need a custom method.
+C# program that uses Replace
+
+using System;
+using System.Text;
+
+class Program
+{
+    static void Main()
+    {
+        StringBuilder builder = new StringBuilder(
+            "This is an example string that is an example.");
+        builder.Replace("an", "the"); // Replaces 'an' with 'the'.
+        Console.WriteLine(builder.ToString());
+        Console.ReadLine();
+    }
+}
+
+Output
+
+This is the example string that is the example.
+
+Immutable. This term indicates that an object's data is not changeable. To see an example of an immutable object, try to assign to a character in a string. This causes a compile-time error.
+And:
+This happens because the string type does not define a set accessor. It cannot be modified once changed.
+Arrays:
+Character arrays can be changed. Internally StringBuilder uses mutable char arrays for its buffer.
+
+AppendFormat. With this method, we add text to a StringBuilder based on a pattern. We can use substitution markers to fill fields in this pattern.
+AppendFormat
+Tip:
+Many versions of AppendFormat in the .NET Framework (such as Console.WriteLine) are implemented with StringBuilder.
+Console.WriteLine
+However:
+It is usually faster to call Append repeatedly with all the required parts. But the syntax of AppendFormat may be clearer.
+
+Loops. Often we use StringBuilders in loops. If many appends are needed, sometimes StringBuilder is helpful in other contexts. Here is an example of StringBuilder in a foreach-loop.
+Foreach
+Note:
+Many looping constructs, including for, while and foreach, are effective when used with StringBuilder.
+C# program that uses foreach
+
+using System;
+using System.Text;
+
+class Program
+{
+    static void Main()
+    {
+        string[] items = { "Cat", "Dog", "Celebrity" };
+
+        StringBuilder builder2 = new StringBuilder(
+            "These items are required:").AppendLine();
+
+        foreach (string item in items)
+        {
+            builder2.Append(item).AppendLine();
+        }
+        Console.WriteLine(builder2.ToString());
+        Console.ReadLine();
+    }
+}
+
+Output
+
+These items are required:
+Cat
+Dog
+Celebrity
+
+Equals. This method compares the contents of two StringBuilders. It avoids lots of error-prone code that might otherwise be needed. It returns true or false.
+Equals
+Caution:
+The Equals method will return false if the capacities of the objects are different, even if their data is identical.
+
+Clear. To clear a StringBuilder, it is sometimes best to allocate a new one. Other times, we can assign the Length property to zero or use the Clear method.
+Clear
+Cache:
+Please see the "Cache" optimization tip for a way to use Clear() to avoid allocations.
+
+Argument. StringBuilder can be passed as an argument. This is a nice optimization. It avoids converting back and forth to strings.
+Tip:
+Eliminating allocations of strings (and StringBuilders) is an effective way to improve program performance.
+Caution:
+Usually it is best to use descriptive names, not "A1" or "b." Code should describe its intent.
+C# program that creates many StringBuilders
+
+using System;
+using System.Text;
+
+class Program
+{
+    static string[] _items = new string[]
+    {
+        "cat",
+        "dog",
+        "giraffe"
+    };
+
+    /// <summary>
+    /// Append to a new StringBuilder and return it as a string.
+    /// </summary>
+    static string A1()
+    {
+        StringBuilder b = new StringBuilder();
+        foreach (string item in _items)
+        {
+            b.AppendLine(item);
+        }
+        return b.ToString();
+    }
+
+    static void Main()
+    {
+        // Called in loop.
+        A1();
+    }
+}
+
+C# program that uses StringBuilder argument
+
+using System;
+using System.Text;
+
+class Program
+{
+    static string[] _items = new string[]
+    {
+        "cat",
+        "dog",
+        "giraffe"
+    };
+
+    /// <summary>
+    /// Append to the StringBuilder param, void method.
+    /// </summary>
+    static void A2(StringBuilder b)
+    {
+        foreach (string item in _items)
+        {
+            b.AppendLine(item);
+        }
+    }
+
+    static void Main()
+    {
+        // Called in loop.
+        StringBuilder b = new StringBuilder();
+        A2(b);
+    }
+}
+
+Results
+
+Version 1: 5039 ms
+Version 2: 3073 ms
+
+Indexer. It is possible to use the indexer to access or change certain characters. This syntax is the same as the syntax for accessing characters in a string instance.
+Next:
+The example tests and changes characters in a StringBuilder. It uses the indexer.
+C# that uses indexer
+
+using System;
+using System.Text;
+
+class Program
+{
+    static void Main()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.Append("cat");
+
+        // Write second letter.
+        Console.WriteLine(builder[1]);
+
+        // Change first letter.
+        builder[0] = 'r';
+        Console.WriteLine(builder.ToString());
+    }
+}
+
+Output
+
+a
+rat
+
+Remove. This method removes a range of characters by index from the internal buffer. As with other StringBuilder methods, this just rearranges the internal buffer.
+Here:
+We remove characters starting at index 4. We remove three characters past that index.
+C# that uses Remove
+
+using System;
+using System.Text;
+
+class Program
+{
+    static void Main()
+    {
+        StringBuilder builder = new StringBuilder("Dot Net Perls");
+        builder.Remove(4, 3);
+        Console.WriteLine(builder);
+    }
+}
+
+Output
+
+Dot  Perls
+
+Substring. We can append a substring directly from another string. No Substring call is needed. We use the Append method to do this.
+Append Substring
+
+ToString. This method is optimized. It will not copy data in certain situations. These optimizations are hard to duplicate in custom code.
+ToString
+
+Trim. StringBuilder has no Trim, TrimStart or TrimEnd methods. But we can implement similar methods. Here we add a TrimEnd method that removes a final character.
+TrimEnd:
+This custom method tests the last character of a StringBuilder for a matching char. It then reduces Length by 1 to erase it.
+Caution:
+There are issues here. Only one char will be removed—we could use a while-loop to remove multiple matching chars.
+And:
+The method will throw an exception if the StringBuilder is empty. We can add a Length >= 1 check to fix this.
+C# that implements Trim on StringBuilder
+
+using System;
+using System.Text;
+
+class Program
+{
+    static void TrimEnd(StringBuilder builder, char letter)
+    {
+        // ... If last char matches argument, reduce length by 1.
+        if (builder[builder.Length - 1] == letter)
+        {
+            builder.Length -= 1;
+        }
+    }
+
+    static void Main()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.Append("This has an end period.");
+        Console.WriteLine(builder);
+
+        TrimEnd(builder, '.');
+        Console.WriteLine(builder);
+    }
+}
+
+Output
+
+This has an end period.
+This has an end period
+
+Exceptions. We get an ArgumentOutOfRangeException if we put too much data in a StringBuilder. The maximum number of characters is equal to Int32.MaxValue.
+ArgumentOutOfRangeException
+Note:
+The Int32.MaxValue constant is equal to 2,147,483,647. This is the max length of a StringBuilder.
+int.MaxValue
+
+Constructor. Often we need to append a string to a StringBuilder right after allocating it. When we specify that string in the constructor, performance improves.
+Tip:
+This optimization can be used with a capacity. Specify the initial string value along with the capacity.
+Version 1
+
+var builder = new StringBuilder(10);
+builder.Append("Cat");
+
+Version 2
+
+var builder = new StringBuilder("Cat", 10);
+
+Times
+
+38.80 ns
+32.47 ns
+
+Char arrays. To use char arrays, code must be more precise. We must know a maximum or absolute size of the output string. This can enhance performance.
+Char Array
+Info:
+StringBuilder is an optimization for building up strings. A char array is an alternative (and sometimes superior) optimization.
+
+A mistake. Sometimes we make a StringBuilder mistake that reduces speed. We use the plus operator on strings within a StringBuilder. This is bad.
+StringBuilder Mistake
+
+Performance. StringBuilder is mainly a performance optimization. Here we test the performance and memory usage of it. We learn when it is superior to strings.
+StringBuilder: optimization
+
+Some comments. These secrets are widely known. But this makes them no less effective. StringBuilder can improve the performance of a program—even if we misuse it.
