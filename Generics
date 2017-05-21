@@ -1,0 +1,4 @@
+Generics in c# is used to make the code reusable and which intern 
+decreases the code redundancy and increases the performance and type safety. 
+Namespace – “System.Collections.Generic” is available in C# 
+and this should be used over “System.Collections” types.
