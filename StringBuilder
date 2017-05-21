@@ -6,6 +6,12 @@ The Append method can be called directly on its own result, in the same statemen
 Because:
 Append(), and other methods like AppendFormat, return the same StringBuilder.
 
+
+StringBuilder is mutable, which means once object for stringbuilder is created, it later be modified either using Append, Remove or Replace.
+String is immutable and it means we cannot modify the string object and will always create new object in memory of string type.
+
+stringbuilder's innter stucture is char[]
+
 Based on: .NET 4.6
 
 C# program that uses StringBuilder
