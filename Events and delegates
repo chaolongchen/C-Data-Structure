@@ -1,0 +1,3 @@
+Main difference between event and delegate is event will provide one more of encapsulation over delegates. 
+So when you are using events destination will listen to it but delegates are naked, 
+which works in subscriber/destination model.
