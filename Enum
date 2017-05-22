@@ -1,6 +1,11 @@
-Enum. In the forest a flower grows. This flower has many attributes. It is blooming. It is pink (not blue or yellow). A gentle wind passes through the region.
-With an enum, we can classify this plant. Consider that flowers come in all colors. It could use FlowerColor.Pink. Another one could be Blue.
-Enum example. Here is an enum that expresses importance. An enum type internally contains an enumerator list. The values (like Trivial and Critical) are ints like 1 and 4.
+Enum. In the forest a flower grows. This flower has many attributes. It is blooming. 
+It is pink (not blue or yellow). A gentle wind passes through the region.
+
+With an enum, we can classify this plant. Consider that flowers come in all colors. 
+It could use FlowerColor.Pink. Another one could be Blue.
+
+Enum example. Here is an enum that expresses importance. An enum type internally contains an enumerator list. 
+The values (like Trivial and Critical) are ints like 1 and 4.
 Int:
 The underlying value of this enum is the default, which is int. When we use an Importance variable, we are using an int.
 
@@ -42,15 +47,18 @@ Output
 
 True
 
-Enum advantages. With an enum, magic constants are separate. This modular design makes things easier to understand. Fewer bugs will be introduced.
+Enum advantages. With an enum, magic constants are separate. 
+This modular design makes things easier to understand. Fewer bugs will be introduced.
 Tip:
 Enums can be used with IntelliSense in Visual Studio. This feature will guess the value you are typing.
 Press tab:
 We can simply press tab and select the enum type we want. This is an advantage to using enum types.
 
-Debugger. Next, we examine what enums look like in the Visual Studio debugger. We see that enums are strongly-typed. You cannot assign them to just any value.
+Debugger. Next, we examine what enums look like in the Visual Studio debugger.
+We see that enums are strongly-typed. You cannot assign them to just any value.
 Note:
-The debugger shows that en1 and en2 are of type Program.E. But internally, these two variables are stored as integers.
+The debugger shows that en1 and en2 are of type Program.E. 
+But internally, these two variables are stored as integers.
 C# program that specifies tag types with enums
 
 using System;
@@ -88,7 +96,8 @@ Output
 
 Bold
 
-Strings. We convert enums to strings for display on the Console. Enum values always have a name, such as E.None, E.BoldTag or E.ItalicsTag.
+Strings. We convert enums to strings for display on the Console. 
+Enum values always have a name, such as E.None, E.BoldTag or E.ItalicsTag.
 Tip:
 To print out the enum values, you can call ToString on the enum variable in a program.
 Also:
