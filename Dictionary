@@ -1,6 +1,10 @@
-Dictionary. In a city many buildings are found. To find a structure we can search the entire city, street by street. But this becomes slow.
-With a dictionary, we can map a building to a location. We can map "park" to where it is found. Then to find the park, we can skip searching the whole city.
-An example. We add 4 keys with values to a Dictionary. Then we look inside it with the Visual Studio debugger. The Dictionary has pairs of keys and values.
+Dictionary. In a city many buildings are found. To find a structure we can search the entire city, 
+street by street. But this becomes slow.
+With a dictionary, we can map a building to a location. We can map "park" to where it is found. 
+Then to find the park, we can skip searching the whole city.
+An example. We add 4 keys with values to a Dictionary. Then we look inside it with the Visual Studio debugger. 
+The Dictionary has pairs of keys and values.
+
 String, int:
 Dictionary is used with different elements. We specify its key type and its value type (string, int).
 Output:
@@ -27,13 +31,19 @@ class Program
     }
 }
 
-Debugger. Let us peek inside the Visual Studio debugger to examine the memory. The Dictionary instance is represented by a collection of key and value pairs.
+Debugger. Let us peek inside the Visual Studio debugger to examine the memory. 
+The Dictionary instance is represented by a collection of key and value pairs.
 Note:
-It is fun (and perhaps helpful) to open and close the data structure elements. Learning often involves experimentation.
+It is fun (and perhaps helpful) to open and close the data structure elements. 
+Learning often involves experimentation.
+
 Tip:
 The pairs like (dog, 1) are the string representations of KeyValuePair instances. KeyValuePair is a struct.
 
-ContainsKey. This sees if a given string is present in a Dictionary. We use string keys here—we look at more types of Dictionaries further on. ContainsKey returns true if the key is found.
+ContainsKey. This sees if a given string is present in a Dictionary. 
+We use string keys here—we look at more types of Dictionaries further on. 
+ContainsKey returns true if the key is found.
+
 ContainsKey
 C# program that uses ContainsKey
 
@@ -70,7 +80,9 @@ Output
 1
 False
 
-TryGetValue. This is often the most efficient look up method. As the name TryGetValue implies, it tests for the key. It then returns the value if it finds the key.
+TryGetValue. This is often the most efficient look up method. As the name TryGetValue implies, 
+it tests for the key. It then returns the value if it finds the key.
+
 TryGetValue
 C# program that uses TryGetValue
 
@@ -103,7 +115,9 @@ Output
 
 feline
 
-TryGetValue, syntax 2. We can declare the "out" variable directly in the method call. This can make the code easier to read—the statements are combined, but have the same effects.
+TryGetValue, syntax 2. We can declare the "out" variable directly in the method call. 
+This can make the code easier to read—the statements are combined, but have the same effects.
+
 C# program that uses inline out, TryGetValue
 
 using System.Collections.Generic;
@@ -128,13 +142,18 @@ Output
 
 lowercase letter C
 
-KeyValuePair. When a collection that implements IDictionary (like Dictionary) is used in a foreach-loop, it returns an enumeration. A Dictionary will return KeyValuePair structs in a loop.
+KeyValuePair. When a collection that implements IDictionary (like Dictionary) is used in a foreach-loop, 
+it returns an enumeration. A Dictionary will return KeyValuePair structs in a loop.
 KeyValuePair
 
-KeyNotFoundException. This error happens when we access a nonexistent key. With Dictionary we must test keys for existence first, with ContainsKey or TryGetValue.
+KeyNotFoundException. This error happens when we access a nonexistent key. 
+With Dictionary we must test keys for existence first, with ContainsKey or TryGetValue.
 KeyNotFoundException
 
-Loop. Here we loop over KeyValuePairs in a Dictionary. With collections like Dictionary, we must always know the value types. With each KeyValuePair, there is a Key member and Value member.
+Loop. Here we loop over KeyValuePairs in a Dictionary. 
+With collections like Dictionary, we must always know the value types. With each KeyValuePair, 
+there is a Key member and Value member.
+
 Foreach
 String, int:
 The code creates a Dictionary with string keys and int values. The Dictionary stores animal counts.
@@ -182,10 +201,14 @@ dog, 1
 llama, 0
 iguana, -1
 
-Var keyword. The final loop in the above code uses var. This reduces the amount of typing required. And it may make code easier to read for humans (like us).
+Var keyword. The final loop in the above code uses var. 
+This reduces the amount of typing required. 
+And it may make code easier to read for humans (like us).
 Var: Dictionary
 
-Keys. Here we use the Keys property. We then look through each key and look up the values. This method is slower but has the same results.
+Keys. Here we use the Keys property. We then look through each key and look up the values. 
+This method is slower but has the same results.
+
 KeyCollection:
 The Keys property returns a collection of type KeyCollection, not an actual List. We can convert it into a List.
 C# program that gets Keys
