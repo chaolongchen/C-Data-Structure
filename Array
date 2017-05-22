@@ -1,8 +1,11 @@
 Array. A prism refracts light. As white light enters, it splits apart. It becomes an array of colors. Consider a string array—we can use strings for these colors.
-Arrays are inside many things. An array has an element type. Its elements are accessed with an index. An array cannot be resized—it can only be created (and then replaced).
+
+Arrays are inside many things. An array has an element type. Its elements are accessed with an index. 
+An array cannot be resized—it can only be created (and then replaced).
 Initialize Array
 
-String arrays. We begin with string arrays. Square brackets are used for all arrays. The syntax is simple and easy to remember (with practice).
+String arrays. We begin with string arrays. Square brackets are used for all arrays. 
+The syntax is simple and easy to remember (with practice).
 Note:
 All of these constructs are equivalent in the compiled code—choose the one you think is clearest.
 Var:
@@ -30,7 +33,8 @@ class Program
 }
 
 
-Int array, parameter. Here is an int array that is passed as a parameter. The entire contents of the array are not copied—just the small reference.
+Int array, parameter. Here is an int array that is passed as a parameter. 
+The entire contents of the array are not copied—just the small reference.
 Tip:
 We can think of an array as a class with a variable number of fields, each accessed with an index.
 C# program that receives array parameter
@@ -60,7 +64,9 @@ Output
 
 -10
 
-Return. We can return arrays from methods. In this example program, we allocate a two-element array of strings in Method(). Then, after assigning its elements, we return it.
+Return. We can return arrays from methods. In this example program, 
+we allocate a two-element array of strings in Method(). 
+Then, after assigning its elements, we return it.
 C# program that returns array reference
 
 using System;
@@ -89,7 +95,8 @@ Output
 
 THANK YOU
 
-First. How can we get the first element? The first element is at index 0. It can be accessed by using the indexer syntax. To be safe, we often must check for empty arrays.
+First. How can we get the first element? The first element is at index 0. 
+It can be accessed by using the indexer syntax. To be safe, we often must check for empty arrays.
 C# program that gets first array element
 
 using System;
@@ -122,7 +129,8 @@ Output
 
 10
 
-Last. The last element's offset is equal to the array Length minus one. Often we need to check against null, and that the Length is greater than zero, before accessing the last element.
+Last. The last element's offset is equal to the array Length minus one. 
+Often we need to check against null, and that the Length is greater than zero, before accessing the last element.
 C# program that gets last array element
 
 using System;
@@ -147,7 +155,8 @@ Output
 
 tiger
 
-Foreach-loop. With this loop, no indexes are needed—the loop itself handles the indexes. This makes some code simpler. We use string interpolation to display the colors.
+Foreach-loop. With this loop, no indexes are needed—the loop itself handles the indexes. 
+This makes some code simpler. We use string interpolation to display the colors.
 Tip:
 For many programs, a foreach-loop is the clearest loop. If the logic does complicated things with indexes, use for.
 C# program that uses for each, array
@@ -171,7 +180,8 @@ Color = red
 Color = blue
 Color = green
 
-For-loop. Here we use a for-loop to iterate over a string array. The length of this array is 2, so the valid indexes are 0 and 1. The variable "i" is set to each array index.
+For-loop. Here we use a for-loop to iterate over a string array. 
+The length of this array is 2, so the valid indexes are 0 and 1. The variable "i" is set to each array index.
 C# that uses for each, for-loops on array
 
 using System;
@@ -197,7 +207,8 @@ Output
 Socrates
 Plato
 
-Empty. Here is another syntax example. To create an empty string array, we can use an empty initializer expression. Or we can specify a 0 length.
+Empty. Here is another syntax example. To create an empty string array, we can use an empty initializer expression. 
+Or we can specify a 0 length.
 C# that creates empty string arrays
 
 using System;
@@ -250,13 +261,16 @@ Output
 1
 -1
 
-2D array. The C# language offers two-dimensional and multidimensional arrays. We also loop over 2D arrays. We use them with enumerators.
+2D array. The C# language offers two-dimensional and multidimensional arrays. 
+We also loop over 2D arrays. We use them with enumerators.
 2D Array
 
-3D array. If two dimensions are not enough, try a three-dimensional array. Even further dimensions can be added. Multidimensional arrays are rarely ideal.
+3D array. If two dimensions are not enough, try a three-dimensional array. 
+Even further dimensions can be added. Multidimensional arrays are rarely ideal.
 3D Array
 
-Jagged array. This is an array of arrays. It can be faster, or slower, than a 2D array based on usage. The memory required too varies. This depends on the shape of data.
+Jagged array. This is an array of arrays. It can be faster, or slower, than a 2D array based on usage. 
+The memory required too varies. This depends on the shape of data.
 Jagged Array
 Jagged Array: Memory
 
