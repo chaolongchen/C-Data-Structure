@@ -1,5 +1,10 @@
-Array Slice. A slice of an array is a range of elements. By using extension methods and generics, we simplify and clarify array slices. This makes for more reusable and powerful code. We write and test an array slice method.
-Example. To start, here we see a generic method, which is simply a C# method that can receive and return parameters of any type. Our Slice method here uses this ability to simulate the built-in slice functionality of Python and other languages.
+Array Slice. A slice of an array is a range of elements. 
+By using extension methods and generics, we simplify and clarify array slices. 
+This makes for more reusable and powerful code. We write and test an array slice method.
+
+Example. To start, here we see a generic method, which is simply a C# method 
+that can receive and return parameters of any type. 
+Our Slice method here uses this ability to simulate the built-in slice functionality of Python and other languages.
 C# program that slices array
 
 using System;
@@ -80,7 +85,10 @@ Output
 3
 4
 
-In the Main method, we see the new Slice extension method used. We are using an int array with seven values in it. The first slice we take extracts the elements between 0 and 1, the first int.
+In the Main method, we see the new Slice extension method used. 
+We are using an int array with seven values in it. 
+The first slice we take extracts the elements between 0 and 1, the first int.
+
 The Extensions class contains a public static method called Slice. It is an extension method, which means it must use the this-keyword in its first parameter (this T[] source). You can find more about declaring custom extension methods.
 Extension Method Examples
 Also:
