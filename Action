@@ -46,19 +46,24 @@ Write 2 and 3
 Done
 
 Notes, above program. We use Action with 3 lambda expressions. 
-The first Action instance uses the constructed type Action<int>, and an explicit parameter list in the lambda expression.
+The first Action instance uses the constructed type Action<int>, 
+and an explicit parameter list in the lambda expression.
 And:
 It receives one argument when invoked. It returns no result—it is a void delegate method.
 
-Notes, continued. The second and third Action instances also return no value. The second Action receives 2 int parameters. The third Action receives no parameters.
+Notes, continued. The second and third Action instances also return no value. 
+The second Action receives 2 int parameters. The third Action receives no parameters.
 Int
 
-Notes, Invoke. The Invoke method receives a number of arguments equal to the specific type of Action. We must specify these arguments in the Action type declaration.
+Notes, Invoke. The Invoke method receives a number of arguments equal to the specific type of Action. 
+We must specify these arguments in the Action type declaration.
 Generic Method
 Tip:
-This information is determined at compile-time, before runtime. If a program compiles, it uses the correct argument types.
+This information is determined at compile-time, before runtime. 
+If a program compiles, it uses the correct argument types.
 
-A benchmark. How much slower are delegate method calls than direct method calls? To test this, we use the Action type with a single parameter.
+A benchmark. How much slower are delegate method calls than direct method calls? 
+To test this, we use the Action type with a single parameter.
 Overview:
 This program introduces the Method1 method, which contains some dummy code for testing.
 First:
@@ -125,10 +130,12 @@ So:
 An Action instance never returns anything, while the Func always returns something.
 Func
 
-Abstract. Next, we compare abstract methods. An Action<int> can be an instance that points to any function that receives an int parameter.
+Abstract. Next, we compare abstract methods. 
+An Action<int> can be an instance that points to any function that receives an int parameter.
 However:
 You can design an abstract class with an abstract method that also can be used in this way.
 Abstract
+
 Next:
 In the following program, we test such an abstract class against an Action<int>.
 Benchmark
@@ -191,8 +198,11 @@ Output
 3.54 ns
 6.68 ns
 
-Results, above benchmark. The Action was slower to call than the method from the abstract class reference. If you can use abstract classes instead of Actions, this will be faster.
-Dictionary. It is possible to use Action as the value in a Dictionary instance. This makes it possible to call functions by a string key.
+Results, above benchmark. The Action was slower to call than the method from the abstract class reference. 
+If you can use abstract classes instead of Actions, this will be faster.
+
+Dictionary. It is possible to use Action as the value in a Dictionary instance. 
+This makes it possible to call functions by a string key.
 Dictionary
 Here:
 In this example, we invoke two static void methods based on simple string keys.
@@ -233,7 +243,8 @@ Output
 CAT
 DOG
 
-A summary. Programs use Action for many purposes. The Action type specifies a function object that can receive parameters, but never returns a value onto the stack.
+A summary. Programs use Action for many purposes. The Action type specifies a function object that can receive parameters, 
+but never returns a value onto the stack.
 Note:
 Thanks to Turker Tunali for helping clarify the Action descriptive text. All contributions are appreciated.
 
