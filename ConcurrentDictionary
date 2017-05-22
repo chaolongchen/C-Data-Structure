@@ -1,10 +1,14 @@
-ConcurrentDictionary handles multiple threads. This type from the System.Collections.Concurrent namespace allows multiple threads to access a Dictionary instance. With it, you get a thread-safe, hash-based lookup algorithm.
+ConcurrentDictionary handles multiple threads. This type from the System.Collections.Concurrent namespace 
+allows multiple threads to access a Dictionary instance. With it, you get a thread-safe, hash-based lookup algorithm.
+
 Note:
 The ConcurrentDictionary type resides in System.Collections.Concurrent. It was introduced in .NET 4.0.
 Note 2:
 It makes adding, removing and updating values in a lookup table on multiple threads easier.
 
-These two programs compare ConcurrentDictionary and Dictionary when adding keys and values. With ConcurrentDictionary, we use the TryAdd method. This does nothing if the key is already found. It returns true if something was added.
+These two programs compare ConcurrentDictionary and Dictionary when adding keys and values. 
+With ConcurrentDictionary, we use the TryAdd method. This does nothing if the key is already found. 
+It returns true if something was added.
 And:
 In the Dictionary program, we use the Add method. The Dictionary program will fail—you cannot Add an existing element.
 
@@ -83,7 +87,9 @@ This is different from the Dictionary Remove method. It has a second, out parame
 TryUpdate:
 This can be used to update a key with the value you provide to a new value. See the below example.
 
-TryUpdate. In this example, the first call to TryUpdate doesn't do anything, because the value of "cat" is not equal to 4. The second call, though, does change the value from 1 to 100 because its value was set to 1.
+TryUpdate. In this example, the first call to TryUpdate doesn't do anything, 
+because the value of "cat" is not equal to 4. 
+The second call, though, does change the value from 1 to 100 because its value was set to 1.
 C# program that tests TryUpdate
 
 using System;
@@ -113,7 +119,10 @@ Output
 
 100
 
-AddOrUpdate, GetOrAdd. Conceptually, the AddOrUpdate method will always result in a value change in the collection. The GetOrAdd method, on the other hand, is the same as AddOrUpdate except it will not change the existing value: it will only return it.
+AddOrUpdate, GetOrAdd. Conceptually, the AddOrUpdate method will always result in a value change in the collection. 
+The GetOrAdd method, on the other hand, is the same as AddOrUpdate except it will not change the existing value: 
+it will only return it.
+
 C# program that uses AddOrUpdate and GetOrAdd
 
 using System;
@@ -151,14 +160,18 @@ Output
 4
 4
 
-The point of these methods is to resolve problems with the nature of time in concurrent systems. With multiple threads, you cannot predict what elements will be found in the collection at any point of execution.
+The point of these methods is to resolve problems with the nature of time in concurrent systems. 
+With multiple threads, you cannot predict what elements will be found in the collection at any point of execution.
+
 Note:
 These fail-safe methods ensure the collection will not become corrupted or invalid even if you cannot predict its contents.
 
-ToArray. The ToArray method on the ConcurrentDictionary type yields an array of KeyValuePair structs. For more information on KeyValuePair, please check out the specific article on this website.
+ToArray. The ToArray method on the ConcurrentDictionary type yields an array of KeyValuePair structs. 
+For more information on KeyValuePair, please check out the specific article on this website.
 KeyValuePair
 
-IsEmpty. Conceptually, the IsEmpty property is equivalent to the expression Count == 0. The collection can never contain a negative number of elements, and is only empty when there are zero elements.
+IsEmpty. Conceptually, the IsEmpty property is equivalent to the expression Count == 0.
+The collection can never contain a negative number of elements, and is only empty when there are zero elements.
 Performance. How fast is ConcurrentDictionary? I tested its lookup performance with TryGetValue against a regular Dictionary. In the simple benchmark, 2000 string keys are assigned to ints. Then the key "100" is looked up and timed.
 Benchmark
 ConcurrentDictionary initialization: C#
