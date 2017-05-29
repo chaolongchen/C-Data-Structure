@@ -5,6 +5,17 @@ This ensures that the most up-to-date value is present in the field at all times
 The volatile modifier is usually used for a field that is accessed by multiple threads without using the lock statement to serialize access.
 ///
 
+Consider this example:
+
+int i = 5;
+System.out.println(i);
+The compiler may optimize this to just print 5, like this:
+
+System.out.println(5);
+However, if there is another thread which can change i, this is the wrong behaviour. If another thread changes i to be 6, the optimized version will still print 5.
+
+The volatile keyword prevents such optimization and caching, and thus is useful when a variable can be changed by another thread.
+
 Volatile, a modifier, reduces concurrency issues. Compilers reorder instructions in blocks. 
 This improves performance but causes problems for concurrent threads. 
 Optimizations such as code motion can cause these problems.
